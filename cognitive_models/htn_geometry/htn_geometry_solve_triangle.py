@@ -1,4 +1,9 @@
 import re
+from random import choice
+
+import sympy as sp
+from sympy import latex, sstr
+
 from shop2.domain import Task, Operator, Method
 from shop2.fact import Fact
 from shop2.conditions import Filter
@@ -183,14 +188,22 @@ def select_area_formula(init_value):
 
 
 def compute_area(init_value):
-    # For AREA example: a=8, b=10, C=30 -> 1/2*8*10*sin(30) = 20
+    # Support 1/2·a·b·sin(C) or Heron's formula if all sides known
     vals = _parse_vals(init_value)
     a = vals.get('a')
     b = vals.get('b')
     C = vals.get('C')
-    if a is None or b is None or C is None:
+    c = vals.get('c')
+
+    area = None
+    if a is not None and b is not None and C is not None:
+        area = sp.nsimplify(sp.Rational(1, 2) * a * b * sp.sin(C*deg))
+    elif a is not None and b is not None and c is not None:
+        s = sp.Rational(a + b + c, 2)
+        area = sp.nsimplify(sp.sqrt(s * (s - a) * (s - b) * (s - c)))
+    if area is None:
         return _ok_any()
-    area = sp.nsimplify(sp.Rational(1, 2) * a * b * sp.sin(C*deg))
+
     hint = latex(area)
     ans = sstr(area, order="grlex")
     return tuple([(re.compile(re.escape(ans)), hint)])
@@ -237,7 +250,7 @@ def consistency_checks(init_value):
 
 
 def report_solution(init_value):
-    # Report the solution: list all sides and angles with values.
+    # Report the solution: list all sides, angles, and area if computable.
     vals = _parse_vals(init_value)
     A = vals.get('A')
     B = vals.get('B')
@@ -246,21 +259,46 @@ def report_solution(init_value):
     b = vals.get('b')
     c = vals.get('c')
 
+    # fill in missing angles
+    if a is not None and b is not None and c is not None:
+        if A is None:
+            A = sp.N(sp.acos((b**2 + c**2 - a**2) / (2*b*c)) / deg)
+        if B is None:
+            B = sp.N(sp.acos((a**2 + c**2 - b**2) / (2*a*c)) / deg)
+        if C is None:
+            C = sp.N(sp.acos((a**2 + b**2 - c**2) / (2*a*b)) / deg)
+    else:
+        if A is not None and B is not None and C is None:
+            C = 180 - (A + B)
+        elif A is not None and C is not None and B is None:
+            B = 180 - (A + C)
+        elif B is not None and C is not None and A is None:
+            A = 180 - (B + C)
+
+    area = None
+    if a is not None and b is not None and C is not None:
+        area = sp.nsimplify(sp.Rational(1, 2) * a * b * sp.sin(C*deg))
+    elif a is not None and b is not None and c is not None:
+        s = sp.Rational(a + b + c, 2)
+        area = sp.nsimplify(sp.sqrt(s * (s - a) * (s - b) * (s - c)))
+
     solution = []
     if A is not None:
-        solution.append(f"A = {A}")
+        solution.append(f"A = {sstr(sp.nsimplify(A))}")
     if B is not None:
-        solution.append(f"B = {B}")
+        solution.append(f"B = {sstr(sp.nsimplify(B))}")
     if C is not None:
-        solution.append(f"C = {C}")
+        solution.append(f"C = {sstr(sp.nsimplify(C))}")
     if a is not None:
         solution.append(f"a = {a}")
     if b is not None:
         solution.append(f"b = {b}")
     if c is not None:
         solution.append(f"c = {c}")
+    if area is not None:
+        solution.append(f"area = {sstr(area)}")
 
-    return tuple([(re.compile("solution"), "Solution: " + ", ".join(solution))])
+    return tuple([(re.compile("solution", re.I), "Solution: " + ", ".join(solution))])
 
 
 # ----------------------
