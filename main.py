@@ -67,6 +67,16 @@ app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Allow SQLite connections to be shared across threads. The asynchronous
+# correctness checks used by HTN tutors execute in worker threads, which would
+# otherwise raise `sqlite3.ProgrammingError` when accessing the database.
+# Setting `check_same_thread` to False permits the same connection to be used
+# from these threads safely for our single-user development server.
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'connect_args': {
+        'check_same_thread': False
+    }
+}
 app.config["CACHE_TYPE"] = "FileSystemCache"
 app.config["CACHE_DIR"] = "cache"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 600
