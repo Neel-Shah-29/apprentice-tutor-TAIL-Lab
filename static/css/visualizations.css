@@ -1,0 +1,8 @@
+.multiline:hover {
+    cursor: pointer;
+}
+
+.line-clicked, .multiline:hover {
+    stroke: #296EF3;
+    opacity: 1;
+}

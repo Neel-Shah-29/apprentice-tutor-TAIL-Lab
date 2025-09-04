@@ -1,0 +1,51 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+       
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Solve Logarithmic Equations Algebraically</h3>
+                        <br>
+                        <br>
+                        <h4>Solve Logarithmic Equation:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm" style="width: 250px">
+                    <math-field disabled="true" id="initial_problem" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                </div>      
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="align-items: center;">
+                    <label class="form-label" style="width: 300px; margin-right: 16px">Move constant term to right hand side:</label>
+                    <math-field id="coeff0_to_rhs" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="align-items: center;">
+                    <label class="form-label" style="width: 300px; margin-right: 16px">Move coeff of \(log(x)\) to right hand side:</label>
+                    <math-field id="coefflnx_to_rhs" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="align-items: center;">
+                    <label class="form-label" style="width: 300px; margin-right: 16px">Take exponential on both side:</label>
+                    <math-field id="exponential_both_sides" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

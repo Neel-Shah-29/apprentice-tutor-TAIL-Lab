@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %} Submit {% endblock %}
+
+{% block nav %}
+<header class="p-3 bg-primary text-white">
+    <div class="container">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+	    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+	    </ul>
+	    <div class="text-end">
+	    </div>
+	</div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+
+<form id="lti13_deep_link_auto_submit" action="{{message_launch.get_deep_link()._deep_link_settings['deep_link_return_url']}}" method="POST">
+    <input type="hidden" name="JWT" value="{{jwt_val}}" /> 
+    <input type="submit" value="Submit"> 
+</form>
+
+<script type="text/javascript">document.getElementById('lti13_deep_link_auto_submit').submit();
+</script>
+
+
+{% endblock %}

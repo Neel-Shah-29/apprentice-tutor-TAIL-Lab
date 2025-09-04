@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Geometry — Solve Triangle (Sides/Angles)</h2>
+    <div id="tutor">
+        <form id="triangle-form">
+            <div class="form-group">
+                <label for="side_a">Side a:</label>
+                <input type="number" id="side_a" name="side_a" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="side_b">Side b:</label>
+                <input type="number" id="side_b" name="side_b" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="side_c">Side c:</label>
+                <input type="number" id="side_c" name="side_c" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_A">Angle A (deg):</label>
+                <input type="number" id="angle_A" name="angle_A" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_B">Angle B (deg):</label>
+                <input type="number" id="angle_B" name="angle_B" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_C">Angle C (deg):</label>
+                <input type="number" id="angle_C" name="angle_C" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="right_triangle">Is this a right triangle?</label>
+                <select id="right_triangle" name="right_triangle" class="form-control">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="area_requested">Is area requested?</label>
+                <select id="area_requested" name="area_requested" class="form-control">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <button type="button" id="done" class="btn btn-primary">Done</button>
+        </form>
+        <div id="hint-area"></div>
+    </div>
+</div>
+{% endblock %}

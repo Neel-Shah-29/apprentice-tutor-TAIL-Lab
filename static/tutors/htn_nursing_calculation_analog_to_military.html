@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Conversion</title>
+    <style>
+        .clock {
+            margin-top: 10px;
+            width: 290px;
+            height: 290px;
+            border: 10px solid black;
+            border-radius: 50%;
+            position: relative;
+            padding: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background: white;
+        }
+        
+        .clock-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            
+        }
+        
+        .hand {
+            width: 50%;
+            background: black;
+            position: absolute;
+            top: 50%;
+            
+            position: absolute;
+        top: 50%;
+        left: 50%; 
+        transform-origin: 0% 50%;
+                    
+        }
+        
+        .hour-hand {
+            height: 7px;
+            background-color: black;
+            max-width: 85px;
+            
+            
+        }
+        
+        .minute-hand {
+            height: 5px;
+            
+        }
+        
+        
+        
+        .number {
+            position: absolute;
+            font-size: 24px;
+            transform: translate(-50%, -50%);
+        }
+        
+        .number1  { top: 13%; left: 72%; }  
+.number2  { top: 30%; left: 82%; } 
+.number3  { top: 50%; left: 90%; }  
+.number4  { top: 70%; left: 82%; }  
+.number5  { top: 87%; left: 72%; }
+.number6  { top: 92%; left: 50%; }  
+.number7  { top: 87%; left: 28%; }  
+.number8  { top: 70%; left: 18%; } 
+.number9  { top: 50%; left: 10%; } 
+.number10 { top: 30%; left: 18%; } 
+.number11 { top: 13%; left: 28%; } 
+.number12 { top: 5%; left: 50%; }  
+
+    </style>
+    <script>
+        setTimeout(function() {
+            
+            const problemText = document.getElementById('initial_problem_text').innerText;
+
+            if (problemText.trim() !== '') {
+                
+            const components = problemText.trim().split(" ");
+            let hourMinute = components[0];
+            let period = components[1];
+            const timeComponent = hourMinute.split(":");
+            let hour = timeComponent[0];
+            let minute = timeComponent[1];
+
+            const displayText = `Use the Analog Clock and the period(AM/PM) to discover the right military time`;
+            document.getElementById('problem_number_2').innerText = displayText;
+            let hourHand = document.getElementById('hour-hand');
+            const hourDegrees = ((parseInt(hour) % 12) / 12) * 360 + (parseInt(minute) / 60) * 30;
+            hourHand.style.transform = `rotate(${-90 + hourDegrees}deg)`;
+                
+            let minuteHand = document.getElementById('minute-hand');
+            const minDegrees = (parseInt(minute) / 60) * 360;
+            minuteHand.style.transform = `rotate(${-90 + minDegrees}deg)`;
+            const periodSection = document.getElementById("period_value");
+            periodSection.innerText = `${period}`
+               
+                
+            } else {
+                /**
+                 * Adding a failure check
+                 */
+                document.getElementById('problem_number_2').innerText = 'No time found.';
+            }
+            
+
+
+        }, 150); 
+        
+    </script>
+</head>
+<body>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <form class="" style="width: 650px;">
+            <div class="container" style="margin: 3%;">
+                <div class="row">
+                    <div class="col-sm">
+                        <div style="text-align: center;">
+                            <h3>Convert between Standard Time to Military Time!</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm">
+                    </div>
+                    <div class="col-sm">
+                        <input disabled type="text" id="initial_problem" class="form-control"
+                            style="width: 500px; display: none;">
+                        <div style="text-align: center; font-size: 0%;" id="initial_problem_text">
+                        </div> 
+                    <div id="problem_number_2" style="width: 550px; font-size: 15px; margin-top: 20px;"></div>
+                    </div>
+
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+           <div id="am_or_pm" style="margin: auto; text-align: center; margin-bottom: 10px; font-size: 25px;">
+            <span>Period: </span>
+            <span id="period_value" style="font-weight: bold;"></span>
+
+           </div>
+
+            <div class="clock" style="margin: auto; margin-bottom: 15px;">
+                <div class="clock-face">
+                    <div class="number number1">1</div>
+                    <div class="number number2">2</div>
+                    <div class="number number3">3</div>
+                    <div class="number number4">4</div>
+                    <div class="number number5">5</div>
+                    <div class="number number6">6</div>
+                    <div class="number number7">7</div>
+                    <div class="number number8">8</div>
+                    <div class="number number9">9</div>
+                    <div class="number number10">10</div>
+                    <div class="number number11">11</div>
+                    <div class="number number12">12</div>
+                    <div id="hour-hand" class="hand hour-hand"></div>
+                    <div id="minute-hand" class="hand minute-hand"></div>
+                    
+                </div>
+            </div>
+
+        <div class="container" style="margin: auto;">
+                    <div class="col" style="display: flex; align-items: center; justify-content: center">
+                        <label class="form-label" style="width: 300px; margin-right: 20px; align-self: flex-end;">Converted Military Time:</label>
+                        <math-field id="solve_time_conversion" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                
+            </div>
+        </form>
+    </div>
+
+
+       
+        
+</body>
+</html>

@@ -1,0 +1,94 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Convert</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display: none;">
+                    <div style="text-align: center; width: 500px; display:none;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_1" style="margin: 2%; display:none; margin-bottom: 25px">
+            <p><strong>Conversion factor:</strong></p>
+            <div class="row justify-content-center">
+                <div class="col-auto d-flex align-items-center">
+                    <span id="conversion_factor1"></span>
+                    <span id="conversion_factor1_units"></span>
+                    <strong style="margin: 0 10px;">=</strong>
+                    <span id="conversion_factor2"></span>
+                    <span id="conversion_factor2_units"></span>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="container level_0" style="margin: 2%;">
+            <!-- <div class="row">
+                <div class="col-sm">
+                    <p>Convert:</p>
+                </div>
+            </div> -->
+            <div class="row justify-content-center">
+                <div class="col-auto d-flex align-items-center">
+                    <span id="convert_given"></span>
+                    <span id="convert_given_units"></span>
+                    <strong style="margin: 0 10px;">=</strong>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <math-field id="convert_value" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    <span style="margin: 0 10px;" id="convert_units"></span>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                    <button id="level_1" style="margin-left:-10px;"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function populateConversionProblem(problem, number, from_unit, to_unit, conversion_factor) {
+        
+        document.getElementById('conversion_factor1').innerText = "1";
+        document.getElementById('conversion_factor1_units').innerText = from_unit;
+        document.getElementById('conversion_factor2').innerText = conversion_factor;
+        document.getElementById('conversion_factor2_units').innerText = to_unit;
+        
+        document.getElementById('convert_given').innerText = number;
+        document.getElementById('convert_given_units').innerText = from_unit;
+        document.getElementById('convert_units').innerText = to_unit;
+
+    }
+
+    $(document).ready(function() {
+        const initial_problem = $('#initial_problem').val(); 
+        const prob = initial_problem.split(',');
+        const val = $("convert_given_units").val()
+        //    prob = [problem, number, from_unit, to_unit, conversion_factors[from_unit][to_unit], 0]
+
+        const problem = prob[0];
+        const number = parseFloat(prob[1]);
+        const from_unit = prob[2];
+        const to_unit = prob[3]; 
+        const conversion_factor = parseFloat(prob[4]); 
+
+        populateConversionProblem(problem, number, from_unit, to_unit, conversion_factor);
+    });
+
+</script>

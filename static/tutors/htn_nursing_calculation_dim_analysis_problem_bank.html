@@ -1,0 +1,194 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Calculate the appropriate dosage</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display: none;">
+                    <div style="text-align: center; width: 500px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_1" style="margin:2%; display:none;">
+            <p><strong>Set up the units for dimensional analysis</strong></p>
+            <div class="row" style="margin-top:1%">
+                <div class="col-sm">
+                    <div class="row">
+                        <select id="frac1_numerator" style="height: 40px;width: 100px;">
+                            <option value="" selected disabled hidden>unit</option>
+                            <option value="tablet">tablet</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                            <option value="dose">dose</option>
+                            <option value="day">day</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <select id="frac1_denominator" style="height: 40px;width: 100px;">
+                            <option value="" selected disabled hidden>unit</option>
+                            <option value="tablet">tablet</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                            <option value="dose">dose</option>
+                            <option value="day">day</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm" style="margin-top:25px">
+                    x
+                </div>
+                <div class="col-sm">
+                    <div class="row">
+                        <select id="frac2_numerator" style="height: 40px;width: 100px;">
+                            <option value="" selected disabled hidden>unit</option>
+                            <option value="tablet">tablet</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                            <option value="dose">dose</option>
+                            <option value="day">day</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        1
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <button id="level_2"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="container level_2" style="margin: 2%; display:none;">
+            <p><strong>Fill in each unit of measurement:</strong></p>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac1_num_value" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit1_num">unit</span>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac1_den_value" data-column="1" data-row="2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit1_den">unit</span>
+                    </div>
+                </div>
+                <div class="col-sm" style="margin-top:25px">
+                    x
+                </div>
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac2_num_value" data-column="2" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit2_num">unit</span>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac2_den_value" data-column="2" data-row="2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p><strong>Calculate the product</strong></p>
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="product_num" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="product_den" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <p>What is the appropriate dosage?</p>
+                    <math-field id="final_answer" virtual-keyboard-mode="onfocus"
+                        style="width: 569px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <button id="level_1" style="margin-left:-10px;margin-top:43px"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function populateDropDowns(u1, u2) {
+        let options = [u1, u2]
+         
+
+        // Populate the dropdowns with the options
+        function populateDropdown(id) {
+            const select = document.getElementById(id);
+            const defaultOption = select.querySelector('option[value=""]');
+            const optionsContainer = document.createDocumentFragment();
+
+            // Keep the default option
+            if (defaultOption) {
+                optionsContainer.appendChild(defaultOption);
+            }
+
+            // Add the new options
+            options.forEach(option => {
+                if (option) { // Ensure non-empty options
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    optionsContainer.appendChild(opt);
+                }
+            });
+
+            // Clear existing options and append new options
+            select.innerHTML = '';
+            select.appendChild(optionsContainer);
+        }
+        // Populate each dropdown
+        populateDropdown('frac1_numerator');
+        populateDropdown('frac1_denominator');
+        populateDropdown('frac2_numerator');
+    }
+
+    function updateUnits() {        
+        var frac1Numerator = ($('#frac1_numerator').val() == null) ? "unit" : $('#frac1_numerator').val();
+        var frac1Denominator = ($('#frac1_denominator').val() == null) ? "unit" : $('#frac1_denominator').val();
+        var frac2Numerator = ($('#frac2_numerator').val() == null) ? "unit" : $('#frac2_numerator').val();
+        
+        // console.log('Values:', frac1Numerator, frac1Denominator, frac2Numerator, frac2Denominator, finalAnswerNumerator, finalAnswerDenominator);
+
+        $('#unit1_num').text(frac1Numerator);
+        $('#unit1_den').text(frac1Denominator);
+        $('#unit2_num').text(frac2Numerator);
+    }
+
+    $(document).ready(function() {
+        const initial_problem = $('#initial_problem').val(); 
+        // console.log(initial_problem)
+        const prob = initial_problem.split(',');
+        const problemText     = prob[0];             // full problem text
+        const orderAmount     = parseFloat(prob[1]); // n1
+        const orderUnit       = prob[2];             // u1
+        const strengthNum     = parseFloat(prob[3]); // n2
+        const strengthDen     = parseFloat(prob[4]); // denominator numeric
+        const strengthUnit    = prob[5];             // u2
+        const dosesPerDay     = parseFloat(prob[6]); // n3
+
+        populateDropDowns(orderUnit, strengthUnit);
+        // console.log('Script loaded and event listeners added.');
+        $('#frac1_numerator, #frac1_denominator, #frac2_numerator').change(updateUnits);
+    });
+</script>

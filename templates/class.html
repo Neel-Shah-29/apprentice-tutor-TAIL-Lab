@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %} My Profile {% endblock %}
+{% block heading %}My Profile{% endblock %}
+
+{% block extraheader %}
+<link rel="stylesheet" href="/css/profile.css" type="text/css">
+{% endblock %}
+
+{% block content %}
+<div class="container" style="margin-top: 2%;">
+    <div class="main-body">
+
+        <!-- Dropdown menu container -->
+       <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                <!-- Drop down menu: Course Section -->
+                <div class="dropdown" style="margin-bottom: 3%;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Course Section
+                    </button>
+                    <div id="section_dropdown" class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    </div>
+                </div>
+
+                <!-- Drop down menu: Tutor -->
+                <div class="dropdown" style="margin-left: 3%; margin-bottom: 3%;">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Tutor
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <button id="all_tutors" onclick="filter_tutor('all_tutors')" class="dropdown-item" type="button">All Tutors</button>   
+                        {% for tutor in stats.keys() %}
+                            <button id="{{ tutor }}" onclick="filter_tutor('{{ tutor }}')" class="dropdown-item" type="button">
+                                {{ tutor.replace("_", " ").capitalize() }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Selected Course & Tutor Display -->
+                <div class="container" style="margin-top: 10px;">
+                    <h4>Selected Course: <span id="selected-course">All Sections</span></h4>
+                    <h4>Selected Tutor: <span id="selected-tutor">All Tutors</span></h4>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Dynamic Tutor Cards -->
+        {% for tutor, students in stats.items() %}
+            <div class="row tutor-section" id="{{tutor}}-cards">
+                <div class="col-sm-12" style="margin-bottom: 2%;">
+                    <h2>{{tutor.replace("_", " ").capitalize()}} Tutor Performance</h2>
+                </div>
+
+                {% if students %}
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body" style="text-align: center;">
+                                <h5 class="d-flex align-items-center mb-3">Number of Problems Steps</h5>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            {% set first_student_key = students.keys() | first %}
+                                            {% set first_student = students[first_student_key] %}
+                                            {% set step_keys = first_student['steps'].keys() if first_student else [] %}
+                                            
+                                            {% for step in step_keys if step != "total_steps" %}
+                                                <th scope="col">{{ step.replace("_", " ").capitalize() }}</th>
+                                            {% endfor %}
+                                            <th scope="col">Total Steps</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for name, counts in students.items() %}
+                                        <tr class="{{ counts['lti_user_id'] }}">
+                                            <td>{{ name }}</td>
+                                            {% for step, value in counts['steps'].items() if step != "total_steps" %}
+                                                <td>{{ value }}</td>
+                                            {% endfor %}
+                                            <td>{{ counts['steps']['total_steps'] }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>                                    
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="col-sm-12" style="margin-bottom: 2%;">
+                        <p>No Current Student Data</p>
+                    </div>               
+                {% endif %}
+                
+            </div>
+        {% endfor %}
+
+    </div>  
+</div>
+
+<script type='text/javascript'>
+    var course_sections = {{ course_sections | tojson }};
+    var course_members = {{ course_members | tojson }};
+    var selectedTutor = "all_tutors";
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let dropdownMenu = document.getElementById("section_dropdown");
+
+        if (dropdownMenu) {
+            dropdownMenu.innerHTML = ""; 
+
+            let active_sections = Object.keys(course_members).filter(course => course_members[course].length > 0);
+
+            // Add "All Sections" button
+            if (active_sections.length > 0) {
+                let allSectionsBtn = document.createElement("button");
+                allSectionsBtn.classList.add('dropdown-item');
+                allSectionsBtn.type = "button";
+                allSectionsBtn.innerText = "All Sections";
+                allSectionsBtn.onclick = function() { filter_course('all_sections'); };
+                dropdownMenu.appendChild(allSectionsBtn);
+            }
+
+            // Populate dropdown with only active course sections
+            active_sections.forEach(section => {
+                let button = document.createElement("button");
+                button.classList.add('dropdown-item');
+                button.type = "button";
+                button.innerText = section;
+                button.onclick = function() { filter_course(section); };
+                dropdownMenu.appendChild(button);
+            });
+        }
+    });
+
+    function escapeCSSSelector(id) {
+        return CSS.escape(id); 
+    }
+
+    function filter_course(section) {
+        let selectedCourseElement = document.getElementById("selected-course");
+
+        if (selectedCourseElement) {
+            selectedCourseElement.innerText = section === "all_sections" ? "All Sections" : section;
+        }
+
+        if (section === "all_sections") {
+            document.querySelectorAll(".tutor-section").forEach((table) => {
+                table.style.display = "block";
+            });
+            document.querySelectorAll(".tutor-section thead").forEach((header) => {
+                header.style.display = "table-header-group"; 
+            });
+            document.querySelectorAll(".tutor-section tbody tr").forEach((row) => {
+                row.style.display = "table-row";
+            });
+        } else {
+            document.querySelectorAll(".tutor-section tbody tr").forEach((row) => {
+                row.style.display = "none";
+            });
+
+            document.querySelectorAll(".tutor-section").forEach((table) => {
+                table.style.display = "none"; // Hide all tables
+            });
+
+            if (course_members.hasOwnProperty(section)) {
+                course_members[section].forEach(student => {
+                    let safeSelector = "." + escapeCSSSelector(student.lti_user_id);
+                    document.querySelectorAll(safeSelector).forEach((row) => {
+                        row.style.display = "table-row";
+                    });
+                });
+
+                // Ensure the headers stay visible for the selected section
+                document.querySelectorAll(".tutor-section thead").forEach((header) => {
+                    header.style.display = "table-header-group";
+                });
+
+                document.querySelectorAll(".tutor-section").forEach((table) => {
+                    table.style.display = "block"; // Show all relevant tables
+                });
+            }
+        }
+
+        // Apply the previously selected tutor filter
+        filter_tutor(selectedTutor);
+    }
+
+    function filter_tutor(tutor) {
+        selectedTutor = tutor; // Store selected tutor
+
+        let selectedTutorElement = document.getElementById("selected-tutor");
+
+        if (selectedTutorElement) {
+            selectedTutorElement.innerText = tutor === "all_tutors" ? "All Tutors" : tutor;
+        }
+
+        if (tutor === "all_tutors") {
+            document.querySelectorAll(".tutor-section").forEach((table) => {
+                table.style.display = "block"; // Show all tutor tables
+            });
+        } else {
+            document.querySelectorAll(".tutor-section").forEach((table) => {
+                table.style.display = "none";
+            });
+
+            let selectedTable = document.getElementById(tutor + "-cards");
+            if (selectedTable) {
+                selectedTable.style.display = "block";
+            }
+        }
+    }
+</script>
+
+
+{% endblock %}

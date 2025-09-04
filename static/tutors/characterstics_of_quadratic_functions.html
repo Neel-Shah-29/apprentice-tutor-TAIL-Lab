@@ -1,0 +1,88 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+       
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Find The Characteristics of Quadratic Equations:</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <div class="col-sm" style="display: flex; align-items: center;">
+                        <img id="quadraticGraph" style="width: 400px; height:400px; border: 1px solid rgba(0, 0, 0, .3)"/>
+                        <input type="hidden" id="initial_problem", disabled="true">
+                    </div>
+                    
+                    <!-- <math-field disabled="true" id="initial_problem" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field> -->
+                </div>
+                <div class="col-sm">
+                </div>      
+            </div>
+        </div>
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">Enter Smaller \(x\) intercept:</label>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label">Enter Larger \(x\) intercept:</label>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label">Enter \(y\) intercept: </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <math-field id="x1_value" style="width: 180px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <!-- <input type="text" id="x1_value" class="form-control" placeholder="Value of x1"> -->
+                </div>
+                <div class="col-sm">
+                    <math-field id="x2_value" style="width: 180px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <!-- <input type="text" id="x2_value" class="form-control" placeholder="Value of x2"> -->
+                </div>
+                <div class="col-sm">
+                    <math-field id="y_value" style="width: 180px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <!-- <input type="text" id="y_value" class="form-control" placeholder="Value of y"> -->
+                </div>
+            </div> 
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">Enter Line of Symmtery:</label>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label">Enter Vertex of Parabola: </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <math-field id="line_of_symmetry" style="width: 270px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <!-- <input type="text" id="line_of_symmetry" class="form-control" placeholder="Equation of line of symmetry"> -->
+                </div>
+                <div class="col-sm">
+                    <label>\(x\)  </label>
+                    <math-field id="vertex_of_parabola_x" style="margin-right: 35px;width: 110px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <label>\(y\)  </label>
+                    <math-field id="vertex_of_parabola_y" style="width: 110px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    <!-- <math-field id="vertex_of_parabola" virtual-keyboard-mode="onfocus" style="width: 290px; border: 1px solid rgba(0, 0, 0, .3);"></math-field> -->
+                    <!-- <input type="text" id="vertex_of_parabola" class="form-control" placeholder="Vertex of parabola (x,y) "> -->
+                </div>
+            </div> 
+        </div>
+        
+    </form>
+</div>
+
+
+<style>
+    math-field::part(virtual-keyboard-toggle) {
+    display: none;
+  }
+</style>

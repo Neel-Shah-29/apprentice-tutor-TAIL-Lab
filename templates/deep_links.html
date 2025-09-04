@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %} Choose Available Tutor {% endblock %}
+{% block heading %}Please select tutor from list below{% endblock %}
+
+{% block nav %}
+<header class="p-3 bg-primary text-white">
+    <div class="container">
+	<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+	    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+	    </ul>
+	    <div class="text-end">
+	    </div>
+	</div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+
+<!-- Default switch turned on -->
+<!-- <div id="grading-checkbox" class="form-check form-switch">
+  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked style="margin: 1%;">
+  <label class="form-check-label" for="flexSwitchCheckChecked" style="margin: 1%;">Toggle to enable/disable Tutor Grading</label>
+</div> -->
+
+<script>
+let checkbox = document.querySelector('#flexSwitchCheckChecked');
+// let links = document.querySelectorAll('#tutor-list a');
+
+console.log(checkbox)
+// console.log(links)
+
+checkbox.addEventListener('change', () => {
+    let grading = checkbox.checked ? '/true' : '/false';
+    let links = $('#list-group a');
+
+    for(var i=0; i< links.length; i++){
+      links[i].href = links[i].href.replace(/\/(true|false)/, grading);
+    }
+})
+</script>
+
+<div id="tutor-list">
+  <ul class="list-group" id="list-group">
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_factoring_polynomials', grading='false') }}" class="list-group-item list-group-item-action">Factoring Polynomials Tutor</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_exponents_redesign', grading='false') }}" class="list-group-item list-group-item-action">Exponents Tutor</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_radicals_redesign', grading='false') }}" class="list-group-item list-group-item-action">Radicals Tutor</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_rational_equation', grading='false') }}" class="list-group-item list-group-item-action">Rational Equations Tutor</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_logarithms', grading='false') }}" class="list-group-item list-group-item-action">Logarithms</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='quadratic_functions', grading='false') }}" class="list-group-item list-group-item-action">Quadratic Functions</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_quadratic_equations', grading='false') }}" class="list-group-item list-group-item-action">Quadratic Equations</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_exponential_equations', grading='false') }}" class="list-group-item list-group-item-action">Exponential Equations</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_logarithmic_equations', grading='false') }}" class="list-group-item list-group-item-action">Logarithmic Equations</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_math_review', grading='false') }}" class="list-group-item list-group-item-action">Nursing Place Value Tutors</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_proportion', grading='false') }}" class="list-group-item list-group-item-action">Nursing Drug Calculation Proportion Method</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_dimanalysis', grading='false') }}" class="list-group-item list-group-item-action">Nursing Drug Calculation Dimensional Analysis</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_iv_therapy', grading='false') }}" class="list-group-item list-group-item-action">Nursing IV Drug Therapy</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_military', grading='false') }}" class="list-group-item list-group-item-action">Nursing Time Conversion Tutors</a>
+    <a href="{{ url_for('configure', launch_id=launch_id, tutor_name='htn_nursing_conversions', grading='false') }}" class="list-group-item list-group-item-action">Nursing Household & Metric Unit Conversions</a>
+
+  </ul>
+</div>
+{% endblock %}

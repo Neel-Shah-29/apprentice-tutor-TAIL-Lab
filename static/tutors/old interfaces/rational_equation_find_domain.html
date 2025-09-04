@@ -1,0 +1,74 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+       
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Find Domain for Rational Equation</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm" style="width: 250px">
+                    <math-field disabled="true" id="initial_problem" style="width: 200px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                </div>      
+            </div>
+        </div>
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="align-items: center;">
+                    <label class="form-label" style="width: 350px;">Set the denominator equal to <strong>zero</strong> and solve:</label>
+                    <math-field id="denominator_set_zero" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="align-items: center;">
+                    <label class="form-label" style="width: 350px;">Factor the trinomial:</label>
+                    <math-field id="factor_trinomial" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <p><strong>Use zero product property:</strong></p>
+            <div class="row" style="margin-top: 1%;">
+                <div class="col-sm">
+                    <p>Enter first equation:</p>
+                    <math-field id="zero_product_1" virtual-keyboard-mode="onfocus" style="width: 290px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+
+                <div class="col-sm">
+                    <p>Enter second equation:</p>
+                    <math-field id="zero_product_2" virtual-keyboard-mode="onfocus" style="width: 290px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="margin:2%;">
+            <p><strong>Solve for \(x\):</strong></p>
+            <div class="d-flex mt-4">
+                <label class="mr-2" style="margin: 1%">First Equation:</label>
+                <math-field id="solve_1" virtual-keyboard-mode="onfocus" style="margin-right:10px;width: 175px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                <label class="mr-2" style="margin: 1%">Second Equation:</label>
+                <math-field id="solve_2" virtual-keyboard-mode="onfocus" style="width: 175px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+            </div>
+        </div>
+
+        <div class="container" style="margin:2%;">
+            <p><strong>The domain is all real numbers except:</strong></p>
+            <div class="d-flex mt-4">
+                <label class="mr-2" style="margin: 1%">First Number:</label>
+                <math-field id="domain_1" virtual-keyboard-mode="onfocus" style="margin-right:15px;width: 178px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                <label class="mr-2" style="margin: 1%">Second Number:</label>
+                <math-field id="domain_2" virtual-keyboard-mode="onfocus" style="width: 178px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+            </div>
+        </div>
+    </form>
+</div>

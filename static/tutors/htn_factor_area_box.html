@@ -1,0 +1,238 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Factor this trinomial using the area “box” method:</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control" style="width: 250px; display: none;">
+                    <div style="text-align: center; width: 250px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container level_2" style="margin: 2%; display:none;">
+            <p><strong>Write the coefficients of the quadratic equation:</strong></p>
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">Enter \(a\) value: </label>
+                    <math-field id="a_value" virtual-keyboard-mode="onfocus" style="width: 175px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label">Enter \(b\) value: </label>
+                    <math-field id="b_value" virtual-keyboard-mode="onfocus" style="width: 175px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <label class="form-label">Enter \(c\) value: </label>
+                    <math-field id="c_value" virtual-keyboard-mode="onfocus" style="width: 175px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <!-- <button id="level_1" style="margin-left: -13px; margin-top:35px" class="btn btn-danger scaffold">+</button> -->
+                </div>
+            </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-sm">
+                    <p>Enter \(ac\) value</strong>:</p>
+                    <math-field id="product_ac" virtual-keyboard-mode="onfocus" style="width: 570px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+        <div class="container level_0" style="margin: 2%; margin-top:4%">
+            <div class="row">
+                <div class="col-sm" style="width:570px;">
+                    <label style="width:570px;" class="form-label"><strong>Find factors using the factor table:</strong></label>
+                </div>
+                <div class="col-sm">
+                    <button id="level_2" style="margin-top:4px;margin-left: 10px" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><p style="font-size: 14px;">Factor 1 of \(c\) :</p></div>
+                <div class="col"><p style="font-size: 14px;">Factor 2 of \(c\) :</p></div>
+                <div class="col"><p style="font-size: 14px;">Sum of Factors:</p></div>
+                <div class="col"><p style="font-size: 14px;">Sum equals \(b\)?</strong></p></div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_1">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_1_b_1" data-column= "1" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_2_b_1" data-column= "2" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_factor_1" data-column= "3" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_c_1" type="checkbox" data-column= "4" data-row= "1" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_2">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_1_b_2" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_2_b_2" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_factor_2" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_c_2" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <span id="row_3" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_3" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_1_b_3" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_2_b_3" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_factor_3" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_c_3" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <span id="row_4" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_4" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_1_b_4" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_2_b_4" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_factor_4" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_c_4" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <span id="row_5" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_5" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_1_b_5" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="factor_2_b_5" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_factor_5" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <input id="sum_c_5" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Box -->
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row" style="margin-top: 2%;">
+                <p>Using the computed values, factor the polynomial using the area "box" method by filling out the cells in this table:</p>
+            </div>
+
+            <div class="row">
+                <div class="col-sm">
+                    <div class="wrapper_large areabox">
+                        <div id="empty_box">
+                        </div>
+                        <div>
+                            <math-field id="sx_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="t_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="qx_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="ax2_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="mx_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="r_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="nx_value" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                        <div>
+                            <math-field id="c_table_vale" virtual-keyboard-mode="onfocus" class="form-control" style="height: 90px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_1" style="margin: 2%; display:none;">
+            <div class="row">
+                <div class="col-sm">
+                    <p>What is the first factored expression?</p><br>
+                    <math-field id="first_expression" virtual-keyboard-mode="off" style="width: 271px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <p>What is the second factored expression?</p>
+                    <math-field id="second_expression" virtual-keyboard-mode="off" style="width: 271px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+         
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <p>Final factored form of polynomial:</p>
+                    <math-field id="final_answer" virtual-keyboard-mode="onfocus" style="width: 569px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <button id="level_1" style="margin-left: -13px; margin-top:43px" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+
+
+<script>
+    function add_row() {
+        // Get the ID of the clicked span
+        var clickedId = $(this).attr('id');
+        $('.' + clickedId).toggle();
+        $('#' + clickedId).toggle();
+    }
+
+    $().ready(function(){
+        $('.add_row').click(add_row);
+    });
+
+</script>

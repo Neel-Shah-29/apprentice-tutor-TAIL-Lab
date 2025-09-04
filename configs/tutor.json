@@ -1,0 +1,86 @@
+{
+    "http://imsglobal.org": [{
+        "issuer": "http://imsglobal.org",
+        "default": true,
+        "client_id": "pytest12345",
+        "auth_login_url": "https://lti-ri.imsglobal.org/platforms/370/authorizations/new",
+        "auth_token_url": "https://lti-ri.imsglobal.org/platforms/370/access_tokens",
+        "key_set_url": "https://lti-ri.imsglobal.org/platforms/370/platform_keys/361.json",
+        "key_set": {
+            "keys": [
+                {
+                    "kty": "RSA",
+                    "e": "AQAB",
+                    "n": "r3WB5ECKptJliYft6F_XJysCy1KevoGJgKNHgdVR20lplUv1SzRH1mifzOmEzxWM0kj6blS7SRxK9GFGs6optHAmzcb6_joegKzLHSj14RRVSoI0MgyltJcAl8z6d4yZ9KobV8OvpICnMgsGO20Wih-Cq-oSUjtJT7WET3GZmzmM9MzamiGsCtC0dUWdDOW1FOMzTt8et9YA5jOfkLdJdPyZ5mdUZjBkYMlDGoD8fPRPdS9M-uczxvUeuKvyy1BVGlu5AG0xy-wN1tKjSE1iuC5Kkm39CZwQXBRpStDExWw_ApzP40SK3CKez4ls3jjkE3i4CpJSgLn1D8rT6wOpJw",
+                    "kid": "uhMfBQzVLmaJNU9c1am2X9pTzcEYhgYL2hO6hbYAvdw",
+                    "alg": "RS256",
+                    "use": "sig"
+                }
+            ]
+        },
+        "private_key_file": "private.key",
+        "public_key_file": "public.key",
+        "deployment_ids": ["py1234"]
+    }],
+    "https://canvas.instructure.com": [
+        {
+            "issuer": "https://canvas.instructure.com",
+            "client_id": "184000000000000111",
+            "auth_login_url": "https://canvas.instructure.com/api/lti/authorize_redirect",
+            "auth_token_url": "https://canvas.instructure.com/login/oauth2/token",
+            "key_set_url": "https://canvas.instructure.com/api/lti/security/jwks",
+            "key_set": null,
+            "private_key_file": "private.key",
+            "public_key_file": "public.key",
+            "deployment_ids": ["128:8dd1cceae153e6687c0cea6f2ab9156b8b6ea61d"]
+        }
+],
+    "ltiadvantagevalidator.imsglobal.org": [{
+        "issuer": "ltiadvantagevalidator.imsglobal.org",
+        "default": true,
+        "client_id": "imstestuser",
+        "auth_login_url": "https://ltiadvantagevalidator.imsglobal.org/ltitool/oidcauthurl.html",
+        "auth_token_url": "https://oauth2server.imsglobal.org/oauth2server/authcodejwt",
+        "key_set_url": "https://tutor.apprentice.ai/lti/jwks",
+        "key_set": null,
+        "private_key_file": "cert_suite_private.key",
+        "public_key_file": null,
+        "deployment_ids": ["testdeploy"]
+    }],
+    "https://blackboard.com": [{
+        "issuer": "https://blackboard.com",
+        "default": true,
+        "client_id": "1edbe0c5-2c63-4558-af87-d55f14409403",
+        "auth_login_url": "https://developer.blackboard.com/api/v1/gateway/oidcauth",
+        "auth_token_url": "https://developer.blackboard.com/api/v1/gateway/oauth2/jwttoken",
+        "key_set_url": "https://developer.blackboard.com/api/v1/management/applications/1edbe0c5-2c63-4558-af87-d55f14409403/jwks.json",
+        "key_set": null,
+        "private_key_file": "tutor-private.key",
+        "public_key_file": "tutor-public.key",
+        "deployment_ids": ["84bcd02a-7180-455a-a519-68005d723efa", "307d417c-f3ee-47a8-96a0-94bd6f0ce59e", "6c7cf5d3-54bb-45ba-b8a7-17bd3d662bc2", "01417ceb-dab5-4112-a39f-aa0ab1396733", "363fa7d2-dd71-4131-8d5c-6adffae7a2ee", "8f6cf672-7c78-4083-9338-88c24f5a7590", "489b8149-b615-4376-8c85-49af5ad66a35", "08c6f2ba-f1cd-4a67-8fd8-8b24568d4085", "1baf00f9-6edd-4561-b2b3-f417c44c0317", "307d417c-f3ee-47a8-96a0-94bd6f0ce59e", "7bf25876-8a0a-494d-89bb-68df99077a10", "cdb2b53d-9ffb-486d-8b92-584c92536194", "76119f83-85a0-492b-96a1-7b2937bf17c7", "8a67a94d-acdf-433b-98e4-f721a30fb2cb", "ec546ad7-1b13-4c21-ab4e-74ed55261164", "aee71686-6e4b-4279-be0f-b0333ef14637", "5ffba541-529f-48c0-a031-ecd7e8028916", "a8cad135-73e8-4121-9ed5-55f744099d49", "ebde2f7f-6cca-4072-b501-2fe4d365e6ea", "7053610a-bb68-4849-931e-6408ca41b583", "3541f753-26a5-49b7-be63-da83453eb825", "dfd4030a-f871-437d-bbc2-f3e34a607af8", "00848e26-3fb1-4718-b992-c37f961a3196", "41d3eeb4-448e-42b4-a69d-745b989c6093", "d1a95363-e2ae-4e42-aba5-7787ed82f4c5"]
+    }],
+    "https://saltire.lti.app/platform": [{
+        "issuer": "https://saltire.lti.app/platform",
+        "default": true,
+        "client_id": "saltire.lti.app",
+        "auth_login_url": "https://saltire.lti.app/platform/auth",
+        "auth_token_url": "https://saltire.lti.app/platform/token/sc2767716ab46abccae047881cd995bd5",
+        "key_set_url": "https://saltire.lti.app/platform/jwks",
+        "key_set": null,
+        "private_key_file": "tutor-private.key",
+        "public_key_file": "tutor-public.key",
+        "deployment_ids": ["cLWwj9cbmkSrCNsckEFBmA"]
+    }],
+    "https://gastatetest2.view.usg.edu": [{
+        "issuer": "https://gastatetest2.view.usg.edu",
+        "default": true,
+        "client_id": "34469403-e2ed-4164-9c6f-38ef782c5e0b",
+        "auth_login_url": "https://gastatetest2.view.usg.edu/d2l/lti/authenticate",
+        "auth_token_url": "https://auth.brightspace.com/core/connect/token",
+        "key_set_url": "https://gastatetest2.view.usg.edu/d2l/.well-known/jwks",
+        "key_set": null,
+        "private_key_file": "tutor-private.key",
+        "public_key_file": "tutor-public.key",
+        "deployment_ids": ["48b0a0b4-260c-482e-b626-b4698dc4ff41"]
+    }]
+}

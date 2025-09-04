@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block extraheader %} {% endblock %}
+
+{% block title %} Sign Up {% endblock %}
+{% block heading %}Sign Up {% endblock %}
+
+{% block content %}
+<style>
+    html,
+    body {
+    height: 100%;
+    }
+    
+    .form-signin {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+    margin-top: 10%;
+    }
+
+    .form-signin .checkbox {
+    font-weight: 400;
+    }
+
+    .form-signin .form-floating:focus-within {
+    z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    }
+
+    .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+</style>
+
+<main class="form-signin">
+
+    <hr>
+    <h4 class="h4 mb-3 fw-normal">To sign in, please connect via a link from your Blackboard Learn Portal</h4>
+    <hr>
+
+    <form method="POST" action="{{ url_for('signup') }}">
+      <h1 class="h3 mb-3 fw-normal">Tutoring System</h1>
+      
+      <div class="form-floating">
+        <input class="form-control" id="first-name" placeholder="Christopher" name="first_name" autofocus=""  disabled="true">
+        <label for="floatingInput">First Name</label>
+      </div>
+
+      <div class="form-floating">
+        <input class="form-control" id="last-name" placeholder="MacLellan" name="last_name" autofocus=""  disabled="true">
+        <label for="floatingInput">Last Name</label>
+      </div>
+
+      <div class="form-floating">
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" autofocus=""  disabled="true">
+        <label for="floatingInput">Email address</label>
+      </div>
+
+      <!-- <div class="form-floating">
+        <input class="form-control" id="school" placeholder="Drexel" name="school" autofocus="">
+        <label for="floatingInput">School</label>
+      </div> -->
+      
+      <div class="form-floating">
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password"  disabled="true">
+        <label for="floatingPassword">Password</label>
+      </div>
+  
+      <button class="w-100 btn btn-lg btn-primary" type="submit" disabled="true">Create my Account</button>
+    </form>
+  </main>
+{% endblock %}
+
+
+{% block footer %}
+
+<script>
+    function enable_fields(){
+        $('input').prop('disabled', false);
+        $('button').prop('disabled', false);
+    }
+
+</script>
+
+{% endblock %}

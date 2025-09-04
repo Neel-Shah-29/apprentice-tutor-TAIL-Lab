@@ -1,0 +1,358 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Calculate the appropriate dosage</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display: none;">
+                    <div style="text-align: center; width: 500px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_1" style="margin: 2%; display:none; margin-bottom: 25px">
+            <p><strong>What is the question asking for?</strong></p>
+            <div class="row">
+                <div class="col">
+                    <select id="final_answer_numerator_units" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a unit</option>
+                        <option value="tablet">tablet</option>
+                        <option value="mg">mg</option>
+                        <option value="mcg">mcg</option>
+                        <option value="dose">dose</option>
+                        <option value="day">day</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <strong>per</strong>
+                </div>
+                <div class="col">
+                    <select id="final_answer_denominator_units" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a unit</option>
+                        <option value="tablet">tablet</option>
+                        <option value="mg">mg</option>
+                        <option value="mcg">mcg</option>
+                        <option value="dose">dose</option>
+                        <option value="day">day</option>
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <button id="level_2"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="container level_2" style="margin:2%; display:none; margin-bottom: 25px">
+            <div class="row" style="margin-top:1%">
+                <div class="col">
+                    <p style="width:250px"><strong>Do you need to convert?</strong></p>
+                </div>
+                <div class="col" style="width:50px">
+                    yes
+                    <input id="yes_convert" type="checkbox" data-column= "1" data-row= "1" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                <div class="col"  style="width:50px">
+                    no
+                    <input id="no_convert" type="checkbox" data-column= "2" data-row= "1" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+                
+                <div class="col-sm">
+                    <button id="level_3"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+            <div id="yes_convert_units" style="display:none">
+                <p><strong>Convert units:</strong></p>
+                <div class="row" style="margin-top:1%">
+                    <div class="col-sm">
+                        <math-field id="convert_value1" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    </div>
+                    <div class="col-sm">
+                        <select id="convert_unit1" style="height: 40px;width: 150px;">
+                            <option value="" selected disabled hidden>unit</option>
+                            <option value="tablet">tablet</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                            <option value="dose">dose</option>
+                            <option value="day">day</option>
+                        </select>
+                    </div>
+                    <div class="col-sm" style="align-items: center;">
+                        <p><strong>=</strong></p>
+                    </div>
+                    <div class="col-sm">
+                        <math-field id="convert_value2" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                    </div>
+                    <div class="col-sm">
+                        <select id="convert_unit2" style="height: 40px;width: 150px;">
+                            <option value="" selected disabled hidden>unit</option>
+                            <option value="tablet">tablet</option>
+                            <option value="mg">mg</option>
+                            <option value="mcg">mcg</option>
+                            <option value="dose">dose</option>
+                            <option value="day">day</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div> -->
+
+
+        <div class="container level_2" style="margin: 2%; display:none; margin-bottom: 25px">
+            <div class="row">
+                    <p><strong>Fill in the information given from the problem.</strong></p>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <p>Identify the Supply:</p>
+                </div>
+                <div class="col-sm">
+                    <p>Identify the Order:</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="supply_numerator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="supply_numerator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="supply_denominator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="supply_denominator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+                
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="order_numerator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="order_numerator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="order_denominator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="order_denominator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <button id="level_3" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_3" style="margin: 2%; display:none;">
+            <p><strong>Cross Multiply</strong></p>
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <label for="cross_multiply_left_side">Left Side:</label>
+                </div>
+                <div class="col-sm" style="margin-top: 1%;">
+                    <label for="cross_multiply_right_side" >Right Side:</label>
+                </div>
+            </div>
+            <div class="row" style="flex: auto;">
+                <div class="col">
+                    <math-field id="cross_multiply_left_side" virtual-keyboard-mode="off" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col">
+                    =
+                </div>
+                <div class="col">
+                    <math-field id="cross_multiply_right_side" virtual-keyboard-mode="off" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col">
+                    <button id="level_4" style="margin-left:-10px;" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="container level_4" style="margin: 2%; display:none;">
+            <p><strong>Solve for x.</strong></p>
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <label for="solve_x_left_side">Left Side:</label>
+                </div>
+                <div class="col-sm" style="margin-top: 1%;">
+                    <label for="solve_x_right_side">Right Side:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <math-field id="solve_x_left_side" virtual-keyboard-mode="off" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col">
+                    =
+                </div>
+                <div class="col-sm">
+                    <math-field id="solve_x_right_side" virtual-keyboard-mode="off" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label for="final_answer" style="padding-bottom:15px">What is the appropriate dosage?</label>
+                    <math-field id="final_answer" virtual-keyboard-mode="onfocus"
+                        style="width: 569px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <button id="level_1" style="margin-left:-10px;margin-top:43px"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function updateUnits() {        
+        var frac1Numerator = ($('#frac1_numerator').val() == null) ? "unit" : $('#frac1_numerator').val();
+        var frac1Denominator = ($('#frac1_denominator').val() == null) ? "unit" : $('#frac1_denominator').val();
+        var frac2Numerator = ($('#frac2_numerator').val() == null) ? "unit" : $('#frac2_numerator').val();
+        var frac2Denominator = ($('#frac2_denominator').val() == null) ? "unit" : $('#frac2_denominator').val();
+        var frac3Numerator = ($('#frac3_numerator').val() == null) ? "unit" : $('#frac3_numerator').val();
+        var frac3Denominator = ($('#frac3_denominator').val() == null) ? "unit" : $('#frac3_denominator').val();
+        var finalAnswerNumerator = ($('#final_answer_numerator_units').val() == null) ? "unit" : $('#final_answer_numerator_units').val();
+        var finalAnswerDenominator = ($('#final_answer_denominator_units').val() == null) ? "unit" : $('#final_answer_denominator_units').val();
+        
+        // console.log('Values:', frac1Numerator, frac1Denominator, frac2Numerator, frac2Denominator, finalAnswerNumerator, finalAnswerDenominator);
+
+        $('#unit1_num').text(frac1Numerator);
+        $('#unit1_den').text(frac1Denominator);
+        $('#unit2_num').text(frac2Numerator);
+        $('#unit2_den').text(frac2Denominator);
+        $('#unit3_num').text(frac3Numerator);
+        $('#unit3_den').text(frac3Denominator);
+        $('#unit_product_num').text(finalAnswerNumerator);
+        $('#unit_product_den').text(finalAnswerDenominator);
+    }
+
+    function toggleConvert(){
+        // console.log('toggle')
+        $('#yes_convert_units').toggle();
+    }
+
+    function populateDropDowns(u1, u2, u3, dose, day) {
+        let options = []
+        if(u1=u2){
+            options = [u1, u3, 'dose', 'day']
+        }
+        else {
+            options = [u1, u2, u3, 'dose', 'day'];
+        }
+         
+
+        // Populate the dropdowns with the options
+        function populateDropdown(id) {
+            const select = document.getElementById(id);
+            const defaultOption = select.querySelector('option[value=""]');
+            const optionsContainer = document.createDocumentFragment();
+
+            // Keep the default option
+            if (defaultOption) {
+                optionsContainer.appendChild(defaultOption);
+            }
+
+            // Add the new options
+            options.forEach(option => {
+                if (option) { // Ensure non-empty options
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    optionsContainer.appendChild(opt);
+                }
+            });
+
+            // Clear existing options and append new options
+            select.innerHTML = '';
+            select.appendChild(optionsContainer);
+        }
+
+        // Populate each dropdown
+        populateDropdown('supply_numerator_units');
+        populateDropdown('supply_denominator_units');
+        populateDropdown('order_numerator_units');
+        populateDropdown('order_denominator_units');
+        populateDropdown('final_answer_numerator_units');
+        populateDropdown('final_answer_denominator_units');
+    }
+
+    $(document).ready(function() {
+        const initial_problem = $('#initial_problem').val(); 
+        // console.log(initial_problem)
+        const prob = initial_problem.split(',');
+        // [n1, u1, n2, u2, u3, words, n3]
+        const problem = prob[0];
+        const n1 = parseFloat(prob[1]);
+        const u1 = prob[2];
+        const n2 = parseFloat(prob[3]); 
+        const u2 = prob[4]; 
+        const u3 = prob[5]; 
+        const n3 = parseFloat(prob[6])
+
+        populateDropDowns(u1, u2, u3, 'dose', 'day');
+        
+        $('#final_answer_numerator_units, #final_answer_denominator_units, #frac1_numerator, #frac1_denominator, #frac2_numerator, #frac2_denominator, #frac3_numerator, #frac3_denominator').change(updateUnits);
+        $('#yes_convert').change(toggleConvert);
+    });
+
+</script>

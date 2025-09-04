@@ -1,0 +1,254 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style=" width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Factor this trinomial using the slip and slide method:</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control" style="width: 250px; display: none;">
+                    <div style="text-align: center; width: 250px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">What does <em>a</em> equal?: </label>
+                    <input type="text" id="a_value" class="form-control" placeholder="Value of a">
+                </div>
+
+                <div class="col-sm">
+                    <label class="form-label">What does <em>b</em> equal?: </label>
+                    <input type="text" id="b_value" class="form-control" placeholder="Value of b">
+                </div>
+
+                <div class="col-sm">
+                    <label class="form-label">What does <em>c</em> equal?: </label>
+                    <input type="text" id="c_value" class="form-control" placeholder="Value of c">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-md">
+                    <p>What is <em>ac</em>?</p>
+                    <input type="text" id="product_ac" class="form-control" placeholder="Value of ac">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-md">
+                    <p>What is the new trinomial that we will factor as part of the slip and slide method?</p>
+                    <input type="text" id="new_equation" class="form-control" placeholder="New trinomial">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">What does <em>b</em> equal for this new trinomial?</label>
+                    <input type="text" id="new_b_value" class="form-control" placeholder="Value of b">
+                </div>
+
+                <div class="col-sm">
+                    <label class="form-label">What does <em>c</em> equal for this new trinomial?</label>
+                    <input type="text" id="new_c_value" class="form-control" placeholder="Value of c">
+                </div>
+            </div>
+        </div>
+
+        <div id="factortable" class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col">
+                    <p><strong>Factor 1 of <em>c</em>:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Factor 2 of <em>c</em>:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Sum of Factors:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Sum Equals <em>b</em>?</strong></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_ac_1" data-column= "1" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_ac_1" data-column= "2" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_1" data-column= "3" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_b_1" type="checkbox" data-column= "4" data-row= "1" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_ac_2" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_ac_2" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_2" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_b_2" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_ac_3" data-column= "1" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_ac_3" data-column= "2" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_3" data-column= "3" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_b_3" type="checkbox" data-column= "4" data-row= "3" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <span id="add_row" class="btn btn-primary">Add Another Row</span>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Next, find the first and second factored expressions for this new trinomial.</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>What is the first expression?</p>
+                    <input type="text" id="new_first_expression" class="form-control" placeholder="Value of expression">
+                </div>
+
+                <div class="col-sm">
+                    <p>What is the second expression?</p>
+                    <input type="text" id="new_second_expression" class="form-control" placeholder="Value of expression">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Convert these expressions from the new trinomial into
+                    modified expressions using slip and slide (no need to
+                    simplify them yet).</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>What is the modified first expression?</p>
+                    <input type="text" id="raw_first_expression" class="form-control" placeholder="Value of expression">
+                </div>
+
+                <div class="col-sm">
+                    <p>What is the modified second expression?</p>
+                    <input type="text" id="raw_second_expression" class="form-control" placeholder="Value of expression">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Simplify each expression, if possible</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>Simplified first expression</p>
+                    <input type="text" id="simplified_first_expression" class="form-control" placeholder="Value of expression">
+                </div>
+
+                <div class="col-sm">
+                    <p>Simplified second expression</p>
+                    <input type="text" id="simplified_second_expression" class="form-control" placeholder="Value of expression">
+                </div>
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Convert each expression into its final form according to
+                    the slip and slide method.</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>Final first expression</p>
+                    <input type="text" id="final_first_expression" class="form-control" placeholder="Value of expression">
+                </div>
+
+                <div class="col-sm">
+                    <p>Final second expression</p>
+                    <input type="text" id="final_second_expression" class="form-control" placeholder="Value of expression">
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>What is the final factored form of the original trinomial?</p>
+                    <input type="text" id="final_answer" class="form-control" placeholder="Final factored form" >
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+    function add_row(){
+            let row_num = $('#factortable > div').length;
+            console.log(row_num)
+
+            $('#factortable').append('<div id="factortable_row' + row_num + '" class="row"></div>')
+
+            $('#factortable_row' + row_num).append('<div class="col"><input id="factor_1_ac_' + row_num + '" data-column= "1" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+            $('#factortable_row' + row_num).append('<div class="col"><input id="factor_2_ac_' + row_num + '" data-column= "2" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+            $('#factortable_row' + row_num).append('<div class="col"><input id="sum_factor_' + row_num + '" data-column= "3" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+            $('#factortable_row' + row_num).append('<div class="col"><input id="sum_b_' + row_num + '" type="checkbox" data-column= "4" data-row= "' + row_num + '" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;"></div>');
+
+            $('#factor_1_ac_' + row_num).change(check_correctness);
+            $('#factor_2_ac_' + row_num).change(check_correctness);
+            $('#sum_factor_' + row_num).change(check_correctness);
+            $('#sum_b_' + row_num).change(check_correctness);
+
+        }
+
+    $().ready(function(){
+            $('#add_row').click(add_row);
+        });
+
+</script>

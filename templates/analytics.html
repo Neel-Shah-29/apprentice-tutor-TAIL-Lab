@@ -1,0 +1,500 @@
+{% extends "base.html" %} {% block title %} My Profile {% endblock %} {% block
+heading %}My Profile{% endblock %} {% block extraheader %}
+<link rel="stylesheet" href="/css/profile.css" type="text/css" />
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="{{ url_for('static', filename='javascript/utils.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/overview-vis.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/auteur/Aug.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/auteur/Draft.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/auteur/GenerationCriteriaBase.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/auteur/Sequence.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/temporal.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/heatmap.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/stepchart.js') }}"></script>
+<script src="{{ url_for('static', filename='javascript/multiline-stepchart.js') }}"></script>
+<script>
+
+  var courseTag;
+  var problemTypeTag;
+  var userTag;
+
+  // Filter for tutor transactions only from this course
+  var selectedCourse;
+
+  // All problems attempted by students in course
+  var allProblemTypes = ["all"];
+  var selectedProblemType = "all";
+
+  // All students in course
+  var allStudents = [{"id":"all", "name":"all"}];
+  var selectedStudent = "all";
+
+  // Selected problem attempt by selected student
+  var studentProblems = ["all"];
+  var selectedProblem;
+
+  var allData;
+  var processedData;
+
+  $( document ).ready(function() {
+      allData = {{ stats["data"] | tojson }};
+      course = {{ stats["courses"] | tojson }};
+      // stats = {{ stats | tojson }}
+      // console.log(stats)
+      if(course.length > 0){
+        update_course({{ stats["courses"] | tojson }}[0][0]);
+        toDatabase("load", "on_load", {{ stats["courses"] | tojson }}[0][0]);
+      }
+
+      
+
+      problemTypeTag = document.getElementById("problemTypeSelect");
+      userTag = document.getElementById("studentSelect");
+      courseTag = document.getElementById("courseSelect");
+  });
+
+  // update course from dropdown menu
+  function update_course_dropdown() {
+    // console.log("updating user...", courseTag.value);
+
+    // If no change, return without updating
+    if (courseTag.value == selectedCourse) {
+      return
+    }
+
+    toDatabase("select", "course_dropdown", courseTag.value);
+
+    update_course(courseTag.value);
+  }
+
+  // update selected course
+  function update_course(course) {
+    // toDatabase("select", "course_dropdown", course);
+
+    selectedCourse = {{ stats["courses"] | tojson }}.filter(d => d[0] === course)[0];
+
+    // All students
+    let allStudentsData = {{ stats["students"] | tojson }};
+
+    // Filter to students in selected course
+    let courseStudents = allStudentsData.filter(as => as.courseID === selectedCourse[0]);
+    let courseStudentID = courseStudents.map(cs => cs.id);
+
+    // filter for transactions for only students in class
+    let courseStudentData = allData.filter(d => courseStudentID.indexOf(d.userid) >=0);
+    processedData = processData(courseStudentData);
+
+    // filter to only students who have made attempts
+    let studentsWithAttempts = courseStudents.filter(cs => Object.keys( processedData[1] ).indexOf(cs.id.toString()) >= 0);
+    allStudents = [{"id":"all", "name":"all"}].concat(studentsWithAttempts.map(cs => {return {"id":cs.id, "name":cs.name}}));
+    selectedStudent = "all";
+    update_student_dropdown(allStudents);
+
+    // get problem types attempted by students in class
+    allProblemTypes = ["all"].concat(Object.keys(processedData[0]));
+    selectedProblemType = "all";
+    update_problem_type_dropdown(allProblemTypes);
+
+    // Since selected student and problem are set back to "all", show overview
+    displayOverview();
+  }
+
+  // when selected user changes
+  function update_user() {
+      // console.log("updating user...", userTag.value)
+
+      // If no change, return without updating
+      if (userTag.value == selectedStudent) {
+        return
+      }
+
+      toDatabase("select", "student_dropdown", userTag.value);
+
+      selectedStudent = userTag.value;
+      display_problems_dropdown();
+
+      if (selectedStudent === "all" && selectedProblemType === "all") {
+        displayOverview();
+      } else if (selectedStudent != "all" && selectedProblemType === "all") {
+        $('#overview-vis').parents('.card').hide();
+        $('#multiline-stepchart').parents('.card').hide();
+        $('#stepchart').parents('.card').hide();
+
+        displayTemporal();
+      } else if (selectedStudent === "all" && selectedProblemType != "all") {
+        $('#temporal').parents('.card').hide();
+        $('#overview-vis').parents('.card').hide();
+        $('#stepchart').parents('.card').hide();
+
+        displayMultiline();
+      } else {
+        $('#overview-vis').parents('.card').hide();
+
+        displayTemporal();
+        displayMultiline();
+      }
+  }
+
+  // when selected problem type changes
+  function update_problemType() {
+      // console.log("updating problem type...", problemTypeTag.value)
+
+      // If no change, return without updating
+      if (problemTypeTag.value == selectedProblemType) {
+        return
+      }
+
+      toDatabase("select", "problem_type_dropdown", problemTypeTag.value);
+
+      selectedProblemType = problemTypeTag.value;
+      display_problems_dropdown();
+
+      if (selectedStudent === "all" && selectedProblemType === "all") {
+        displayOverview();
+      } else if (selectedStudent != "all" && selectedProblemType === "all") {
+        $('#overview-vis').parents('.card').hide();
+        $('#multiline-stepchart').parents('.card').hide();
+        $('#stepchart').parents('.card').hide();
+
+        displayTemporal();
+      } else if (selectedStudent === "all" && selectedProblemType != "all") {
+        $('#temporal').parents('.card').hide();
+        $('#overview-vis').parents('.card').hide();
+        $('#stepchart').parents('.card').hide();
+
+        displayMultiline();
+      } else {
+        $('#overview-vis').parents('.card').hide();
+
+        displayTemporal();
+        displayMultiline();
+      }
+  }
+
+  // when selected student problem changes
+  function update_problem() {
+    let problemTag = document.querySelector('select#problems');    
+    // If no change, return without updating
+    if (problemTag.value == selectedProblem) {
+      return
+    }
+
+    toDatabase("select", "problem_dropdown", problemTag.value);
+
+    selectedProblem = problemTag.value;
+
+    if (selectedProblem === "all") {
+      $('#stepchart').parents('.card').hide();
+
+      d3.selectAll(".main_multiline").attr("opacity", 0.6).attr("class", "main_multiline");
+
+    } else {
+      findPathtoHighlight(selectedProblem);
+      displayStepchart();
+    }
+  }
+
+  function displayOverview() {
+    // console.log("display overview...")
+    $('#overview-vis').parents('.card').show();
+
+    // Hide all other vis
+    $('#temporal').parents('.card').hide();
+    $('#multiline-stepchart').parents('.card').hide();
+    $('#stepchart').parents('.card').hide();
+
+    // Hide problem select dropdown
+    $('#problem-contents').hide();
+
+    // Render overview
+    renderOverviewVis( processedData[0], ['problemType', 'numCorrect', 'numIncorrect'] );
+  }
+
+  function displayTemporal() {
+    // console.log("display temporal...")
+    // Show temporal vis
+    $('#temporal').parents('.card').show();
+    renderTemporal( processedData[1], selectedStudent, selectedProblemType );
+  }
+
+  function displayMultiline() {
+    // console.log("display multiline...")
+    // Show multiline vis
+    $('#multiline-stepchart').parents('.card').show();
+    renderMultiLineStepChart( processedData[0], selectedProblemType, selectedStudent );
+  }
+
+  function displayStepchart() {
+    // console.log("display stepchart...")
+    // Show stepchart vis
+    $('#stepchart').parents('.card').show();
+    renderStepChart( processedData[0], selectedProblemType, selectedStudent, selectedProblem );
+  }
+
+  function display_problems_dropdown() {
+    if (selectedProblemType === 'all' || selectedStudent === 'all') {
+      $('#problem-contents').hide();
+      $('#stepchart').parents('.card').hide();
+
+      studentProblems = ["all"];
+      selectedProblem = "all";
+    } else {
+      problems = getAttemptedProblems(processedData[0][selectedProblemType][selectedStudent]);
+      if (problems == undefined || JSON.stringify(problems) == '{}') {
+        $('#problem-contents').hide();
+        $('#stepchart').parents('.card').hide();
+      } else {
+        // console.log("displaying problems dropdown...")
+        $('#problem-contents').show();
+        $('#stepchart').parents('.card').show();
+        update_problems_dropdown(["all"].concat(Object.keys(problems)));
+      }
+    }
+  }
+
+  // filter out problems that have no attempted steps
+  function getAttemptedProblems(allProblems) {
+    let p = {};
+    for (let prob in allProblems) {
+      for (let step in allProblems[prob]) {
+        if (allProblems[prob][step].selection !== '') {
+          p[prob] = allProblems[prob];
+          break;
+        }
+      }
+    }
+    return p;
+  }
+
+  // Update the options for problem type
+  function update_problem_type_dropdown(opt) {
+    if (document.querySelector('#problemTypeSelect *') === null) {
+      let select = document.getElementById('problemTypeSelect');
+
+      for (let pt of opt.sort()) {
+        let option = document.createElement('option');
+        option.value = pt;
+        option.innerHTML = pt;
+        select.appendChild(option);
+      }
+    } else {
+      // clear current dropdown values in select
+      let options = document.querySelectorAll('#problemTypeSelect option');
+      for (let option of options) {
+        option.remove();
+      }
+      // add new options in the select dropdown
+      let select = document.getElementById('problemTypeSelect');
+      for (let pt of opt.sort()) {
+        let option = document.createElement('option');
+        option.value = pt;
+        option.innerHTML = pt;
+        select.appendChild(option);
+      }
+    }
+  }
+
+  // Update the options for student
+  function update_student_dropdown(opt) {
+    if (document.querySelector('#studentSelect *') === null) {
+      let select = document.getElementById('studentSelect');
+
+      for (let pt of opt.sort()) {
+        let option = document.createElement('option');
+        option.value = pt.id;
+        option.innerHTML = pt.name;
+        select.appendChild(option);
+      }
+    } else {
+      // clear current dropdown values in select
+      let options = document.querySelectorAll('#studentSelect option');
+      for (let option of options) {
+        option.remove();
+      }
+      // add new options in the select dropdown
+      let select = document.getElementById('studentSelect');
+      for (let pt of opt.sort()) {
+        let option = document.createElement('option');
+        option.value = pt.id;
+        option.innerHTML = pt.name;
+        select.appendChild(option);
+      }
+    }
+  }
+
+  function update_problems_dropdown(opt) {
+    let p = document.getElementById('problem-contents');
+
+    if (document.querySelector('#problem-contents *') === null) {
+        let label = document.createElement('label');
+        label.style.marginRight = "5px";
+        label.innerHTML = 'Select Problem:';
+
+        let select = document.createElement('select');
+        select.id = 'problems';
+        select.name = 'problems';
+        select.style.maxWidth = "600px";
+        select.style.whiteSpace = "nowrap";
+        select.style.overflow = "hidden";
+        select.style.textOverflow = "ellipsis";
+
+        select.addEventListener('change', update_problem);
+
+        opt.sort().forEach(pt => {
+            let option = document.createElement('option');
+            option.value = pt;
+            option.textContent = pt.length > 100 ? pt.slice(0, 100) + "..." : pt;
+            option.title = pt; // Tooltip with full text
+            select.appendChild(option);
+        });
+
+        p.appendChild(label);
+        p.appendChild(select);
+    } else {
+        let select = document.getElementById('problems');
+        select.innerHTML = "";
+        opt.sort().forEach(pt => {
+            let option = document.createElement('option');
+            option.value = pt;
+            option.textContent = pt.length > 100 ? pt.slice(0, 100) + "..." : pt;
+            option.title = pt;
+            select.appendChild(option);
+        });
+    }
+}
+
+
+
+</script>
+{% endblock %} {% block content %}
+<div class="container" style="margin-top: 2%">
+  <div class="main-body">
+
+    <div class="row">
+      <div class="col-sm-4 card">
+        <div>
+          <div id="analytics-dropdown d-flex">
+            <form style="padding: 1rem 0rem">
+              <label name="courseType" style="margin-right: 5px">Course:</label>
+              <select
+                onchange="update_course_dropdown()"
+                name="courseSelect"
+                id="courseSelect"
+              >
+                {% for c in stats["courses"] %}
+                <option value="{{ c[0] }}">{{ c[1] }}</option>
+                {% endfor %}
+              </select>
+              <br /><br />
+
+              <label name="problemType" style="margin-right: 5px">Select Problem Type:</label>
+              <br />
+              <select
+                onchange="update_problemType()"
+                name="problemTypeSelect"
+                id="problemTypeSelect"
+                style="width: 90%"
+              >
+              </select>
+              <br /><br />
+
+              <label style="margin-right: 5px">Select Student:</label>
+              <br />
+              <select
+                onchange="update_user()"
+                name="studentSelect"
+                id="studentSelect"
+                style="width: 90%">
+              </select>
+              <br /><br />
+
+              <div id="problem-contents"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-8">
+
+        <div class="card">
+          <div class="card-body" style="text-align: center">
+            <svg id="overview-vis">
+              <clipPath id="overviewvis-clip">
+                <rect />
+              </clipPath>
+              <g class="elements">
+                <rect />
+                <g class="x-axis"></g>
+                <g class="y-axis"></g>
+                <g class="questions"></g>
+              </g>
+              <text class="x-label"></text>
+              <text class="y-label"></text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="text-align: center">
+            <div id="temporalSelectors" style="display: flex; flex-direction:column; align-items:flex-start;"></div>
+            <div id="vis">
+              <svg id="temporal">
+                <clipPath id="temporal-clip">
+                  <rect />
+                </clipPath>
+                <g clip-path="url(#temporal-clip)" id="vis-container"></g>
+                <g clip-path="url(#temporal-clip)" id="x-axis"></g>
+                <g id="y-axis"></g>
+                <g clip-path="url(#temporal-clip)" id="start-points"></g>
+                <g clip-path="url(#temporal-clip)" id="complete-points"></g>
+                <g clip-path="url(#temporal-clip)" id="step-change"></g>
+                <div id="tooltip"></div>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="text-align: center">
+            <svg id="multiline-error">
+            </svg>
+            <svg id="multiline-stepchart">
+              <clipPath id="multiline-clip">
+                <rect />
+              </clipPath>
+              <g class="elements">
+                <rect />
+                <g class="x-axis"></g>
+                <g class="y-axis"></g>
+                <g class="lines"></g>
+              </g>
+              <text class="title"></text>
+              <text class="x-label"></text>
+              <text class="y-label"></text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body" style="text-align: center">
+            <svg id="stepchart">
+              <clipPath id="line-clip">
+                <rect />
+              </clipPath>
+              <g class="elements">
+                <g class="x-axis"></g>
+                <g class="y-axis"></g>
+                <g class="lines"></g>
+              </g>
+              <text class="title"></text>
+              <text class="x-label"></text>
+              <text class="y-label"></text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

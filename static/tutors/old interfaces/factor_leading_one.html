@@ -1,0 +1,166 @@
+
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Factor this Trinomial with leading coefficient 1:</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control" style="width: 250px; display: none;">
+                    <div style="text-align: center; width: 250px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>      
+            </div>
+        </div>
+
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label class="form-label">What does <em>b</em> equal? </label>
+                    <input type="text" id="b_value" class="form-control" placeholder="Value of b">
+                </div>
+
+                <div class="col-sm">
+                    <label class="form-label">What does <em>c</em> equal? </label>
+                    <input type="text" id="c_value" class="form-control" placeholder="Value of c">
+                </div>
+            </div>
+          </div>
+
+          <div id="factortable" class="container" style="margin: 2%;">
+            <div class="row">
+                <div class="col">
+                    <p><strong>Factor 1 of <em>c</em>:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Factor 2 of <em>c</em>:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Sum of Factors:</strong></p>
+                </div>
+                <div class="col">
+                    <p><strong>Sum equals <em>b</em>?</strong></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_b_1" data-column= "1" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_b_1" data-column= "2" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_1" data-column= "3" data-row= "1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_c_1" type="checkbox" data-column= "4" data-row= "1" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_b_2" data-column= "1" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_b_2" data-column= "2" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_2" data-column= "3" data-row= "2" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_c_2" type="checkbox" data-column= "4" data-row= "2" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input id="factor_1_b_3" data-column= "1" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="factor_2_b_3" data-column= "2" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_factor_3" data-column= "3" data-row= "3" class="form-control" value="" style="width: 75px; margin-bottom: 5px;">
+                </div>
+                <div class="col">
+                    <input id="sum_c_3" type="checkbox" data-column= "4" data-row= "3" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="container" style="margin: 2%;">
+            <div class="row">
+                <span id="add_row" class="btn btn-primary">Add Another Row</span>
+            </div>
+        </div>
+
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Utilize <strong>factor 1</strong> and <strong>factor 2</strong> to create expressions with <strong><em>x</em></strong>.</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <p>First expression:</p>
+                    <input type="text" id="first_expression" class="form-control" placeholder="First part">
+                </div>
+
+                <div class="col-sm">
+                    <p>Second expression:</p>
+                    <input type="text" id="second_expression" class="form-control" placeholder="Second part">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container" style="margin: 2%;">
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <p>Write the final solution in <strong>factored form</strong>:</p>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 2%;">
+                <div class="col-sm">
+                    <input type="text" id="final_answer" class="form-control" placeholder="Factored polynomial" >
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script>
+
+    function add_row(){
+        let row_num = $('#factortable > div').length;
+        // console.log(row_num)
+
+        $('#factortable').append('<div id="factortable_row' + row_num + '" class="row"></div>')
+
+        $('#factortable_row' + row_num).append('<div class="col"><input id="factor_1_b_' + row_num + '" data-column= "1" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+        $('#factortable_row' + row_num).append('<div class="col"><input id="factor_2_b_' + row_num + '" data-column= "2" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+        $('#factortable_row' + row_num).append('<div class="col"><input id="sum_factor_' + row_num + '" data-column= "3" data-row= "' + row_num + '" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></div>');
+        $('#factortable_row' + row_num).append('<div class="col"><input id="sum_c_' + row_num + '" type="checkbox" data-column= "4" data-row= "' + row_num + '" value="" style="width: 38px; height: 38px; display: block; margin-bottom: 5px;"></div>');
+
+        $('#factor_1_b_' + row_num).change(check_correctness);
+        $('#factor_2_b_' + row_num).change(check_correctness);
+        $('#sum_factor_' + row_num).change(check_correctness);
+        $('#sum_c_' + row_num).change(check_correctness);
+
+    }
+
+    $().ready(function(){
+        $('#add_row').click(add_row);
+    });
+
+</script>

@@ -1,0 +1,345 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Use the quotient rule to simplify the expression with two square roots</h3>
+                        <br>
+                        <br>
+                        <h4>Simplify the radical expression:</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm" style="width: 250px">
+                    <math-field disabled="true" id="initial_problem" style="width: 150px; height: fit-content; text-align:justify; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+        <div class="container level_1r0r0" style="margin: 2%; display:none;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" id="apply_quotient_rule_prompt" style="width: 300px; margin-right: 20px">Apply the quotient rule to the expression:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="apply_quotient_rule" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container level_1r2r0" style="margin: 2%; display:none;">
+            <div class="row">
+                <div class="col-sm" style="width:570px;">
+                    <label style="width:570px;" id="reduce_radical_table_a_prompt" class="form-label"><strong>Reduce the numerator radical using table:</strong></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><p style="font-size: 14px;">Lesser Square :</p></div>
+                <div class="col"><p style="font-size: 14px;">Greatest Square Factor</p></div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_a1">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_a1" data-column= "1" data-row= "1" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_a1" type="select" data-column= "1" data-row= "1" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_a2">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_a2" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_a2" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_a3" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_a3" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_a3" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_a3" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_a4" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_a4" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_a4" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_a4" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_a5" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_a5" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_a5" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_a5" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'></div>
+            </div>
+        </div>
+        <div class="container level_1r1r0" style="margin: 2%; display:none;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" id="divide_out_a_prompt" style="width: 300px; margin-right: 20px">Divide out the largest square from the numerator radical:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="divide_out_a" class="level_1r2r0" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                    <div style="margin-left: 10px;"><button id="level_1r2r0" class="btn btn-danger scaffold">+</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="container level_1r0r0" style="margin: 2%; display:none;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" id="reduce_radical_a_prompt" style="width: 300px; margin-right: 20px">Simplify your answer by reducing the numerator radical:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="reduce_radical_a" class="level_1r1r0" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                <div style="margin-left: 10px;"><button id="level_1r1r0" class="btn btn-danger scaffold">+</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="container level_1r0r2" style="margin: 2%; display:none;">
+            <div class="row">
+                <div class="col-sm" style="width:570px;">
+                    <label style="width:570px;" id="reduce_radical_table_b_prompt" class="form-label"><strong>Reduce the denominator using table:</strong></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col"><p style="font-size: 14px;">Lesser Square :</p></div>
+                <div class="col"><p style="font-size: 14px;">Greatest Square Factor</p></div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_b1">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_b1" data-column= "1" data-row= "1" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_b1" type="select" data-column= "2" data-row= "1" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'></div>
+            </div>
+            <div class="row row_b2">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_b2" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_b2" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_b3" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_b3" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_b3" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_b3" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_b4" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_b4" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_b4" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_b4" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'>
+                    <span id="row_b5" style="width:95px" class="add_row btn btn-primary">Add Row</span>
+                </div>
+            </div>
+            <div class="row row_b5" style="display:none;">
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="lesser_square_b5" data-column= "1" data-row= "2" class="form-control" value="" style="width: 90px; margin-bottom: 5px;"></math-field>
+                    </div>
+                </div>
+                <div class="col" style="display: flex; justify-content: center; align-items: center;">
+                    <div style="position: relative; display: inline-block;">
+                        <select id="is_greatest_b5" type="select" data-column= "2" data-row= "2" value="" style="width: 50px; height: 38px; display: block; margin-bottom: 5px;">
+                            <option value="unselected">--</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+                <div class='col'></div>
+            </div>
+        </div>
+        <div class="container level_1r0r1" style="margin: 2%; display:none;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" id="divide_out_b_prompt" style="width: 300px; margin-right: 20px">Divide out the largest square from the denominator radical:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="divide_out_b" class="level_1r0r2" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                    <div style="margin-left: 10px;"><button id="level_1r0r2" class="btn btn-danger scaffold">+</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="container level_1r0r0" style="margin: 2%; display:none;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" id="reduce_radical_b_prompt" style="width: 300px; margin-right: 20px">Simplify your answer by reducing the denominator radical:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="reduce_radical_b" class="level_1r0r1" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                    <div style="margin-left: 10px;"><button id="level_1r0r1" class="btn btn-danger scaffold">+</button></div>
+                </div>
+            </div>
+        </div>
+        <div class="container level_0r0r0" style="margin: 2%;">
+            <div class="row" style="display: flex; align-items: center;">
+                <div class="col" style="display: flex; align-items: center;">
+                    <label class="form-label" style="width: 300px; margin-right: 20px">Reiterate the quotient using reduced radicals, simplifying where possible:</label>
+                    <div style="position: relative; display: inline-block;">
+                        <math-field id="dividing_square_root" class="level_1r0r0" virtual-keyboard-mode="onfocus" style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                    <div style="margin-left: 10px;"><button id="level_1r0r0" class="btn btn-danger scaffold">+</button></div>
+                </div>
+            </div>
+        </div>
+        
+
+
+    </form>
+</div>
+
+<script>
+    function add_row() {
+        // Get the ID of the clicked span
+        var clickedId = $(this).attr('id');
+        $('.' + clickedId).toggle();
+        $('#' + clickedId).toggle();
+    }
+
+    function update_labels() {
+        const problem_text = $('#initial_problem').val();
+        var radicals = problem_text.split('}{');
+        let radical_1 = radicals[0];
+        radical_1 = radical_1.substring(12);
+        let radical_2 = radicals[1].slice(0, -2);
+
+        $('#reduce_radical_a_prompt').text("Reduce \\(\\sqrt{" + radical_1 + "}\\):");
+        $('#reduce_radical_b_prompt').text("Reduce \\(\\sqrt{" + radical_2 + "}\\):");
+
+        $('#divide_out_a_prompt').text("Divide out the largest square from \\(\\sqrt{" + radical_1 + "}\\) under the radical:");
+        $('#divide_out_b_prompt').text("Divide out the largest square from \\(\\sqrt{" + radical_2 + "}\\) under the radical:");
+
+        $('#reduce_radical_table_a_prompt').text("Reduce \\(\\sqrt{" + radical_1 + "}\\) using the table:");
+        $('#reduce_radical_table_b_prompt').text("Reduce \\(\\sqrt{" + radical_2 + "}\\) using the table:");
+        $('#reduce_radical_table_a_prompt').css("font-weight", "bold");
+        $('#reduce_radical_table_b_prompt').css("font-weight", "bold");
+
+        MathJax.typeset([
+            $('#reduce_radical_a_prompt').get(0),
+            $('#reduce_radical_b_prompt').get(0),
+            $('#divide_out_a_prompt').get(0),
+            $('#divide_out_b_prompt').get(0),
+            $('#reduce_radical_table_a_prompt').get(0),
+            $('#reduce_radical_table_b_prompt').get(0),
+]);
+        
+
+    }
+
+    $().ready(function(){
+        update_labels()
+        $('.add_row').click(add_row);
+    });
+
+</script>

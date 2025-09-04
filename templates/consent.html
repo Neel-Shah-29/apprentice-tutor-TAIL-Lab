@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %} Consent {% endblock %}
+{% block heading %}Consent{% endblock %}
+
+{% block extraheader %} 
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+{% endblock %}
+
+
+{% block content %}
+<div id="container-consent">
+<div id="consent">
+    <h1>Informed Consent Agreement</h1>
+    <hr>
+    <div class="legal well">
+
+            <p><strong>Project Title:</strong> Artificial Intelligence for Enhancing Adult Learning and Online Education</p>
+            <p><strong>Principal Investigator:</strong> Christopher J. MacLellan</p>
+
+            <p>You are being asked to be a volunteer in a research study. The purpose of this study is to understand how artificial intelligence could be integrated into classrooms to help support and improve student learning.</p>
+            
+            <p>As part of the study, you will be given access to an intelligent tutoring system that is designed to support you in learning your class material. You can spend as much or as little time using the tutor as you would like. The exact combination of features utilized by the tutor you receive will be determined based on your random assignment to a particular experimental condition. At the end of the semester, you will be sent an email survey on your attitudes and perspectives about your learning experience with the tutor. We will analyze your anonymized usage and survey data to investigate which features best support your performance and learning.</p>
+
+            <p>	Participation in this study is completely voluntary. You can use the tutor whether you consent to participate or not. Those involved in administration of the class will not be aware of which students consent to participate in the study.</p>
+
+            <p>Once you consent, we will log your name and email address and associate them with a unique anonymous identifier. To protect your confidentiality, all the subsequent data we collect from you will be associated with this unique identifier. The key mapping your name/email to your unique identifier will be kept under password protection on a secure Georgia Tech server. At the end of the semester, we will use your name and email to invite you to participate in a survey about your experience using the tutor. This is the only time your name and email will be used, and they will never be shared outside of the approved research team. To promote open and reproducible science, we plan to release anonymized data in conjunction with our research publications. It will be impossible to identify you from any data we release. We will also comply with any applicable laws and regulations regarding confidentiality.</p>
+
+            <p>By consenting in this study, you acknowledge that you are at least 18 years old and reside in the US. The risks involved by participating in this study are no greater than those involved in daily activities. You will not be compensated for joining this study, but if you complete the end of semester survey, then you will be thanked with a $5 Amazon gift card. To make sure that this research is being carried out in the proper way, the Georgia Institute of Technology IRB may review study records. If you have any questions about the study, you may contact (Dr. Christopher MacLellan) at cmaclellan3@gatech.edu. If you have any questions about your rights as a research subject, you may contact Georgia Institute of Technology Office of Research Integrity Assurance at IRB@gatech.edu. Thank you for participating in this study.</p>
+
+        <button type="button" onClick="window.print();">
+            Print a copy of this
+        </button>
+    </div>
+<!-- 
+    <hr>
+    <h4>Survey</h4>
+    <br>
+    <center>
+        <iframe src="https://qualtricsxm79yf2m8yd.qualtrics.com/jfe/form/SV_8kyvX3WMTDBNDJI" width="700" height="600" frameborder="1"></iframe>
+    </center> -->
+    <hr>
+    <!-- <h4>By proceeding, you indicate your consent to be in the study.</h4> -->
+    <br>
+
+    <center>
+        <form method="POST" action="{{ url_for('consent', tutor_name=tutor, interface_name=interface_type) }}">
+            <!-- <button type="button" class="btn btn-primary btn-lg" type="submit" value="agree" name="agree">
+                <span>&nbsp;&nbsp;</span> I agree <span>&nbsp;&nbsp;</span>
+            </button> -->
+            <input type="submit" name="consent_submit" class="btn btn-primary px-4" value="Agree">  
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
+            <input type="submit" name="consent_submit" class="btn btn-danger px-4" value="Disagree">
+            <!-- <button type="button" class="btn btn-danger btn-lg" type="submit" value="disagree" name="disagree">
+                <span>&nbsp;&nbsp;</span>No thanks <span>&nbsp;&nbsp;</span>
+            </button> -->
+        </form>
+    </center>
+
+</div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+{% block heading %}Please see the list of tutors available below{% endblock %}
+
+{% block content %}
+
+<div id="tutor-list">
+  <div class="accordion" id="tutorAccordion">
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingMath">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMath" aria-expanded="true" aria-controls="collapseMath">
+          Math Topics
+        </button>
+      </h2>
+      <div id="collapseMath" class="accordion-collapse collapse show" aria-labelledby="headingMath" data-bs-parent="#tutorAccordion">
+        <div class="accordion-body p-0">
+          <ul class="list-group">
+            <a href="/htn_factoring_polynomials" class="list-group-item list-group-item-action">Factoring Polynomials</a>
+            <a href="/htn_exponents_redesign" class="list-group-item list-group-item-action">Exponents</a>
+            <a href="/htn_radicals_redesign" class="list-group-item list-group-item-action">Radicals</a>
+            <a href="/htn_rational_equation" class="list-group-item list-group-item-action">Rational Equations</a>
+            <a href="/htn_logarithms" class="list-group-item list-group-item-action">Logarithms</a>
+            <a href="/quadratic_functions" class="list-group-item list-group-item-action">Quadratic Functions</a>
+            <a href="/htn_quadratic_equations" class="list-group-item list-group-item-action">Quadratic Equations</a>
+            <a href="/htn_exponential_equations" class="list-group-item list-group-item-action">Exponential Equations</a>
+            <a href="/htn_logarithmic_equations" class="list-group-item list-group-item-action">Logarithmic Equations</a>
+            <a href="/htn_geometry_solve_triangle" class="list-group-item list-group-item-action">Geometry — Solve Triangle</a>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingNursing">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNursing" aria-expanded="false" aria-controls="collapseNursing">
+          Nursing Topics
+        </button>
+      </h2>
+      <div id="collapseNursing" class="accordion-collapse collapse" aria-labelledby="headingNursing" data-bs-parent="#tutorAccordion">
+        <div class="accordion-body p-0">
+          <ul class="list-group">
+            <a href="/htn_nursing_math_review" class="list-group-item list-group-item-action">Place Value Tutors</a>
+            <a href="/htn_nursing_military" class="list-group-item list-group-item-action">Time Conversion Tutors</a>
+            <a href="/htn_nursing_conversions" class="list-group-item list-group-item-action">Household & Metric Unit Conversions</a>
+            <a href="/htn_nursing_proportion" class="list-group-item list-group-item-action">Drug Calculation Proportion Method</a>
+            <a href="/htn_nursing_formula_method" class="list-group-item list-group-item-action">Drug Calculation Formula Method</a>
+            <a href="/htn_nursing_dimanalysis" class="list-group-item list-group-item-action">Drug Calculation Dimensional Analysis</a>
+            <a href="/htn_nursing_iv_therapy" class="list-group-item list-group-item-action">IV Drug Therapy</a>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  $("#tutorial").click(function(e) {
+    // Initialize Shepherd Tour
+    const tour = new Shepherd.Tour({
+      useModalOverlay: true,
+      defaultStepOptions: {
+        scrollTo: true,
+        cancelIcon: {
+                    enabled: true
+                },
+      }
+    });
+  
+    // Step 1: Homepage Introduction
+    tour.addStep({
+      title: 'Homepage',
+      text: 'Welcome to the homepage of the apprentice tutor!',
+      attachTo: {
+        element: '#home-page',
+        on: 'top'
+      },
+      buttons: [
+        {
+          action: function() { return this.back(); },
+          classes: 'shepherd-button-secondary',
+          text: 'Previous'
+        },
+        {
+          action: function() { return this.next(); },
+          text: 'Continue'
+        }
+      ],
+      id: 'home-page-step'
+    });
+    // Step 2: Profile page Introduction
+    tour.addStep({
+      title: 'Your Profile',
+      text: 'Checkout your profile and progress on this page!',
+      attachTo: {
+        element: '#profile-page',
+        on: 'top'
+      },
+      buttons: [
+        {
+          action: function() { return this.back(); },
+          classes: 'shepherd-button-secondary',
+          text: 'Previous'
+        },
+        {
+          action: function() { return this.next(); },
+          text: 'Continue'
+        }
+      ],
+      id: 'profile-page-step'
+    });
+    // Step 3: Exploring Tutor List
+    tour.addStep({
+      title: 'Tutor List',
+      text: 'Checkout a tutor you would like to learn from!',
+      attachTo: {
+        element: '#tutor-list',
+        on: 'bottom'
+      },
+      buttons: [
+        {
+          action: function() { return this.back(); },
+          classes: 'shepherd-button-secondary',
+          text: 'Previous'
+        },
+        {
+          action: function() { return this.next(); },
+          text: 'Continue'
+        }
+      ],
+      id: 'tutor-list-step'
+    });
+
+    // Additional steps for further guidance...
+  
+    // Start the Tour
+    tour.start();
+  });
+</script>
+
+{% endblock %}

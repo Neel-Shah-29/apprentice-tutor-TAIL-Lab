@@ -1,0 +1,198 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Identify information from the problem</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display:none;">
+                    <div style="text-align: center; width: 500px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_0" style="margin: 2%; margin-bottom: 25px">
+            <p><strong>What is the question asking for?</strong></p>
+            <div class="row">
+                <div class="col">
+                    <select id="final_answer_numerator_units" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a unit</option>
+                        <option value="tablet">tablet</option>
+                        <option value="mg">mg</option>
+                        <option value="mcg">mcg</option>
+                        <option value="dose">dose</option>
+                        <option value="day">day</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <strong>per</strong>
+                </div>
+                <div class="col">
+                    <select id="final_answer_denominator_units" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a unit</option>
+                        <option value="tablet">tablet</option>
+                        <option value="mg">mg</option>
+                        <option value="mcg">mcg</option>
+                        <option value="dose">dose</option>
+                        <option value="day">day</option>
+                    </select>
+                </div>
+                
+            </div>
+
+            <div class="row" style="margin-top:25px;">
+                <div class="col-sm">
+                    <p>Identify the Supply:</p>
+                </div>
+                <div class="col-sm">
+                    <p>Identify the Order:</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="supply_numerator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="supply_numerator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="supply_denominator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="supply_denominator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm"></div>
+                
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="order_numerator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="order_numerator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="order_denominator" data-column="1" data-row="1" class="form-control" value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <select id="order_denominator_units" style="height: 40px;width: 150px;">
+                                <option value="" selected disabled hidden>unit</option>
+                                <option value="tablet">tablet</option>
+                                <option value="mg">mg</option>
+                                <option value="mcg">mcg</option>
+                                <option value="dose">dose</option>
+                                <option value="day">day</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function populateDropDowns(u1, u2, u3, dose, day) {
+        let options = []
+        if(u1=u2){
+            options = [u1, u3, 'dose', 'day']
+        }
+        else {
+            options = [u1, u2, u3, 'dose', 'day'];
+        }
+         
+
+        // Populate the dropdowns with the options
+        function populateDropdown(id) {
+            const select = document.getElementById(id);
+            const defaultOption = select.querySelector('option[value=""]');
+            const optionsContainer = document.createDocumentFragment();
+
+            // Keep the default option
+            if (defaultOption) {
+                optionsContainer.appendChild(defaultOption);
+            }
+
+            // Add the new options
+            options.forEach(option => {
+                if (option) { // Ensure non-empty options
+                    const opt = document.createElement('option');
+                    opt.value = option;
+                    opt.textContent = option;
+                    optionsContainer.appendChild(opt);
+                }
+            });
+
+            // Clear existing options and append new options
+            select.innerHTML = '';
+            select.appendChild(optionsContainer);
+        }
+
+        // Populate each dropdown
+        populateDropdown('supply_numerator_units');
+        populateDropdown('supply_denominator_units');
+        populateDropdown('order_numerator_units');
+        populateDropdown('order_denominator_units');
+        populateDropdown('final_answer_numerator_units');
+        populateDropdown('final_answer_denominator_units');
+    }
+
+    $(document).ready(function() {
+        const initial_problem = $('#initial_problem').val(); 
+        // console.log(initial_problem)
+        const prob = initial_problem.split(',');
+        // [n1, u1, n2, u2, u3, words, n3]
+        const problem = prob[0];
+        const n1 = parseFloat(prob[1]);
+        const u1 = prob[2];
+        const n2 = parseFloat(prob[3]); 
+        const u2 = prob[4]; 
+        const u3 = prob[5]; 
+        const n3 = parseFloat(prob[6])
+
+        populateDropDowns(u1, u2, u3, 'dose', 'day');
+    });
+
+</script>

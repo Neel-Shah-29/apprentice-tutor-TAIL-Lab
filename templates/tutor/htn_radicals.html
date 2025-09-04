@@ -1,0 +1,931 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="tutor-box" style="margin-bottom: 25% ;">
+    <div id="choose_interface" style="text-align: center; margin-top: 1%">
+        <div>
+            {% if interface_type == "adaptive" %}
+            <a class="btn btn-primary" id="adaptive-button" href="/{{ tutor_type }}">Adaptive Problem Selection</a>
+            {% else %}
+            <a class="btn btn-outline-primary" id="adaptive-button" href="/{{ tutor_type }}">Adaptive Problem Selection</a>
+            {% endif %}
+            {% if interface_type == "htn_radical_product_rule" %}
+            <a class="btn btn-primary" href="/{{ tutor_type }}?interface=htn_radicals_product_rule">Radical Product Rule</a>
+            {% else %}
+            <a class="btn btn-outline-primary" href="/{{ tutor_type }}?interface=htn_radicals_product_rule">Radicals Product Rule</a>
+            {% endif %}
+            {% if interface_type == "htn_radical_quotient_rule" %}
+            <a class="btn btn-primary" href="/{{ tutor_type }}?interface=htn_radicals_quotient_rule">Radicals Quotient Rule</a>
+            {% else %}
+            <a class="btn btn-outline-primary" href="/{{ tutor_type }}?interface=htn_radicals_quotient_rule">Radical Quotient Rule</a>
+            {% endif %}
+            {% if interface_type == "htn_radical_adding_square_root" %}
+            <a class="btn btn-primary" href="/{{ tutor_type }}?interface=htn_radicals_adding_square_roots">Adding Square Roots</a>
+            {% else %}
+            <a class="btn btn-outline-primary" href="/{{ tutor_type }}?interface=htn_radicals_adding_square_roots">Adding Square Roots</a>
+            {% endif %}
+
+            {% if interface_type == "htn_radical_subtracting_square_root" %}
+            <a class="btn btn-primary" href="/{{ tutor_type }}?interface=htn_radicals_subtracting_square_roots">Subtracting Square Roots</a>
+            {% else %}
+            <a class="btn btn-outline-primary" href="/{{ tutor_type }}?interface=htn_radicals_subtracting_square_roots">Subtracting Square Roots</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mb-0" style="display: flex; justify-content: center; margin-top: 1%">
+        <row>
+            <button class="btn btn-danger", target="_blank", id="get_video">supplementary video</button>
+            <button class="btn btn-warning", target="_blank", id="get_read">textbook resource</button>
+        </row>
+    </div>
+    <div id="progress" style="display: flex; justify-content: center; align-items: center;">
+        <div style="margin-top: 0.5%; width: 650px;">
+            <div><strong>My Progress</strong></div>
+            <div class="progress mb-3" style="height: 10px; margin-top: 1%;">
+                <div id="tutor_progress" class="progress-bar bg-danger" role="progressbar" style="height: 10px; width: 0%" aria-valuenow="{{ 0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+    <div id="tutor">
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <div style="margin: 1%; width: 650px;">
+            <div id="hint-box">
+                <div class="mb-3" style="display: block; justify-content: center; align-items: center;">
+                    <row>
+                        <!-- <textarea disabled rows="4" id="hint-area" class="form-control"></textarea> -->
+                        <div id="hint-area" class="textarea-like"></div>
+                    </row>
+                    <row style="display: flex; justify-content: right; margin-top: 3%;">
+                        <button disabled id="copy_hint" type="button" class="btn btn-outline-danger" style="margin-right: 2%;">Copy Answer</button>
+                        <button disabled id="previous_hint" type="button" class="btn btn-outline-primary" style="margin-right: 2%;">Previous Hint</button>
+                        <!-- <button disabled id="next_hint" type="button" class="btn btn-outline-primary" style="margin-right: 2%;">Next Hint</button> -->
+                        <button id="get_hint" type="button" class="btn btn-warning" style="margin-right: 2%;">Ask for Hint!</button>
+                        <button id="solve_for_me" type="button" class="btn btn-warning" style="margin-right: 2%;">Solve For Me</button>
+                        <button id="done" type="submit" class="btn btn-primary">Done!</button>
+                    </row>
+                    <row>
+                        <div id="copy_message" class="hidden">Answer has been successfully copied!</div>
+                    </row>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+<script>
+    var interface;
+    var start_state;
+    var hint_counter = 0
+    var hint;
+    var attempted;
+    var skill;
+    var scaffold_type;
+    
+    function scaffold(currdiv){
+        $('#' + currdiv).removeClass('btn-danger').addClass('btn-light');
+        $('#' + currdiv).prop('disabled', true);
+        $('.'+currdiv).css("display", "block");
+        $('.'+currdiv).find('input').prop('disabled', false);
+    }
+    function get_scaffolding(state, update){
+        const uniqueLevels = Array.from(
+            new Set([...document.querySelectorAll('div')].map(div => div.className).filter(name => /level_\d+/.test(name)))
+        ).sort();
+        
+        const count = uniqueLevels.length; 
+        // const count = 0;
+        const segments = Array.from({ length: count }, (_, i) => (i + 1) * (1 / (count + 1)));
+        
+        if (scaffold_type == 'sigmoid') {
+            segments.some((segment, j) => {
+                if (skill <= segment) {
+                    for (let i = 1; i <= count - j; i++) {
+                        const currdiv = `level_${i}`;
+                        if (update){
+                            scaffold(currdiv); 
+                        }
+                    }
+                    if (update){
+                        state = state.filter(obj => !obj.hasOwnProperty('scaffold'));
+                        state.push({ scaffold: `level_${count - j}`});
+                    }
+                    return true; 
+                }
+                return false; 
+            });
+        }
+        else if (scaffold_type == 'flat') {
+            for (let i = 1; i <= count; i++) {
+                const currdiv = `level_${i}`;
+                if (update){
+                    scaffold(currdiv); 
+                }
+            }
+            // console.log(count);
+            if (update) {
+                state = state.filter(obj => !obj.hasOwnProperty('scaffold'));
+                state.push({ scaffold: `level_${count}` });
+            }
+            // console.log(state);
+        }
+        else if (scaffold_type == 'ucurve') {
+            // manual scaffold
+        }
+
+        let maxId = 0;
+
+        $('.scaffold:disabled').each(function() {
+            const currentId = parseInt($(this).attr('id').split('_')[1], 10);
+            if (currentId > maxId) {
+                maxId = currentId;
+            }
+        });
+
+
+        const maxScaffold = `level_${maxId}`;
+        if (!state.some(obj => obj.scaffold === maxScaffold)) {
+            state.push({ scaffold: maxScaffold });
+        }
+
+        return state;
+    }
+
+    function get_state(update_scaffold) {
+        let state = [];
+        const initial_problem = $('#initial_problem').val(); 
+        state.push({'field': 'equation', 'value': initial_problem, 'answer': false });
+
+        $('input, math-field').each(function() {
+            let id = $(this).attr('id');
+            if (typeof id !== 'undefined' && id !== 'initial_problem') { 
+                const value = $(this).val(); 
+                // check if the field is not disabled and has a value
+                if ($(this).prop('disabled') && $(this).val() !== '') {
+                    state.push({'field': id, 'value': $(this).val(), 'answer': true});
+                }
+            }
+        });
+
+        state.push({'skill': skill})
+        state = get_scaffolding(state, update_scaffold);
+        // console.log(state);
+        return state; 
+    }
+
+
+    function update_hint(){
+            if (hint){
+                    // ######### momin add start ##########
+                    // Should probably change in else block too, discuss with Adit
+                    var hint_text = hint["hints"][hint_counter];
+                    $('#hint-area').html(hint_text);
+                    MathJax.typeset([$('#hint-area').get(0)]); // Render MathJax within the div 
+                    // ######### momin add end ##########
+
+
+                    if(hint_counter > 0){
+                            $("#previous_hint").prop('disabled', false);
+                        }
+                    else{
+                            $("#previous_hint").prop('disabled', true);
+                        }
+
+                    if(hint_counter < hint['hints'].length - 1){
+                            $("#next_hint").prop('disabled', false);
+                        }
+                    else{
+                            $("#next_hint").prop('disabled', true);
+                        }
+                    if(hint_counter == hint['hints'].length - 1){
+                            $("#copy_hint").prop('disabled', false);
+                    }
+                    else{
+                            $("#copy_hint").prop('disabled', true);
+                    }
+                }
+            else{
+                    $('#hint-area').val("");
+                    $("#copy_hint").prop('disabled', true);
+                    $("#previous_hint").prop('disabled', true);
+                    $("#next_hint").prop('disabled', true);
+                }
+        }
+    function copy_hint(){
+            const $textarea = $('<textarea></textarea>');
+            const str = hint["hints"][hint_counter];
+            const backslashIndex = str.indexOf("\\\(");;
+            const closingParenthesisIndex = str.indexOf("\\\)");
+            var substringBetween = str.substring(backslashIndex, closingParenthesisIndex+2);
+            $textarea.val(substringBetween);
+            $('body').append($textarea);
+            $textarea.select();
+            document.execCommand('copy');
+            $textarea.remove();
+    } 
+    function check_correctness(input_ele){
+            if ($(input_ele.target).prop('disabled') == true){
+                return;
+            }
+
+            // clear hint
+            $('math-field').removeClass("hint_field");
+            $('math-field').removeClass("incorrect_field");
+            $('input').removeClass("hint_field");
+            $('input').removeClass("incorrect_field")
+            $('button').removeClass("incorrect_field")
+            $('button').removeClass("hint_field");
+            hint = null;
+            hint_counter = 0;
+            update_hint();
+
+            if (($(input_ele.target).attr('type') != 'select' &&$(input_ele.target).val() == "") ||
+                    ($(input_ele.target).attr('type') == 'select' &&
+                            !$(input_ele.target).val() == "yes")
+                ){
+                    $(input_ele.target).removeClass("incorrect_field")
+                    return
+                }
+
+            let value = $(input_ele.target).val();
+            if ($(input_ele.target).attr('type') == 'select' &&
+                    $(input_ele.target).val() == "yes"){
+                    value = "yes";
+                }
+
+            $.ajax({
+                    type: "POST",
+                    url: "/check_correctness",
+                    data: JSON.stringify({
+                            "user": "user1",
+                            "tutor": "{{tutor_type}}",
+                            "interface": interface,
+                            "start_state": start_state,
+                            "state": get_state(false),
+                            "selection": $(input_ele.target).attr('id'),
+                            "action": "input change",
+                            "input": value,
+                            "first_attempt": (attempted[$(input_ele.target).attr('id')] === undefined)
+                        }),
+                    success: function(correctness){
+                            attempted[$(input_ele.target).attr('id')] = true
+
+                            if(correctness["correct"]){
+                                    // color text green
+                                    $(input_ele.target).removeClass("incorrect_field").addClass("correct_field")
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                    // lock elemenet
+                                    $(input_ele.target).prop('disabled', true);
+                                    // console.log("THIS IS CORRECT")
+                                }
+                            else{
+                                    $("#get_video").addClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").addClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").addClass("btn-warning-highlight") // Momin add line
+                                    // color inout box red
+                                    // console.log($(input_ele.target))
+                                    $(input_ele.target).removeClass("correct_field").addClass("incorrect_field")
+                                    // console.log("THIS IS INCORRECT")
+
+                                }
+                        },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+        }
+        function get_next_problem(){
+            $.ajax({
+                    type: "POST",
+                    url: "/next_problem",
+                    data: JSON.stringify({
+                            "user":"user1",
+                            "tutor":"{{tutor_type}}",
+                            "interface": "{{interface_type}}"
+                        }),
+                    success: function(problem){
+                            // console.log(problem)
+                            attempted = {};
+
+                            $.ajax({
+                                    type: "GET",
+                                    url: "/tutors/" + problem["interface"],
+                                    success: function(tutor_html){
+                                            hint = null;
+                                            update_hint();
+                                            $('button').removeClass("hint_field");
+                                            $('button').removeClass("incorrect_field");
+
+                                            $("#tutor").html(tutor_html).promise().done(function(){
+
+                                                    // scroll to top
+                                                    window.scrollTo(0, 0);
+
+                                                    // MathJax
+                                                    MathJax.typeset();
+
+                                                    interface = problem['interface'].split(".html")[0]
+                                                    start_state = problem["start_state"]
+                                                    
+
+                                                    for(var ele in problem["start_state"]){
+                                                            // console.log("!!!!!!")
+                                                            // console.log(ele)
+                                                            $("#"+ele).val(problem["start_state"][ele])
+                                                        }
+                                                    skill = problem["kc_progress"];
+                                                    scaffold_type = problem["scaffold_type"];
+                                                    get_state(true);
+                                                    if (skill < 0.5) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-danger');
+                                                    } else if (skill < 0.75) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-warning');
+                                                    } else if (skill < 0.95) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-primary');
+                                                    } else {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-success');
+                                                    }
+
+                                                    $('#tutor_progress').attr('aria-valuenow', skill * 100);
+                                                    $('#tutor_progress').css('width', skill * 100 + '%');
+
+
+                                                    $("#done").off('click');
+                                                    $("#done").click(function(input_ele){
+                                                            $.ajax({
+                                                                    type: "POST",
+                                                                    url: "/check_correctness",
+                                                                    data: JSON.stringify({
+                                                                            "user": "user1",
+                                                                            "tutor": "{{tutor_type}}",
+                                                                            "interface": interface,
+                                                                            "start_state": start_state,
+                                                                            "state": get_state(false),
+                                                                            "selection": $(input_ele.target).attr('id'),
+                                                                            "action": "button click",
+                                                                            "input": "x",
+                                                                            "first_attempt": (attempted[$(input_ele.target).attr('id')] === undefined)
+                                                                        }),
+                                                                    success: function(correctness){
+                                                                            // console.log(input_ele)
+                                                                            // console.log($(input_ele.target))
+                                                                            attempted[$(input_ele.target).attr('id')] = true
+                                                                            $("#hint-area").html(""); //Momin line
+
+                                                                            if(correctness["correct"]){
+                                                                                    get_next_problem();
+                                                                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                                                                }
+                                                                            else{
+                                                                                    $("#get_video").addClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_read").addClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_hint").addClass("btn-warning-highlight") // Momin add line
+                                                                                    // color inout box red
+                                                                                    $(input_ele.target).addClass("incorrect_field")
+                                                                                }
+                                                                        },
+                                                                    dataType: "json",
+                                                                    contentType: "application/json"
+                                                                });
+                                                        });
+
+                                                    $("input").change(check_correctness);
+                                                    $("math-field").change(check_correctness);
+
+                                                });
+                                        },
+                                });
+
+                        },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+        }
+
+        function log_scaffold(){
+            $.ajax({
+                            type: "POST",
+                            url: "/log_scaffold",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": "{{interface_type}}",
+                                    "start_state": start_state,
+                                    "state": get_state(),
+                                    "attempted": attempted,
+                                    "action": "button click",
+                                    "correctness": "SCAFFOLD",
+                                }),
+                            success: function(result) {
+                                    // console.log(result)
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+
+        }
+
+        function tutorial() {
+            const tour = new Shepherd.Tour({
+                useModalOverlay: true,
+                defaultStepOptions: {
+                    scrollTo: false,
+                    cancelIcon: {
+                                enabled: true
+                            },
+                    }
+            });
+
+            const createButton = (text, action) => ({
+                text,
+                action: () => action.call(tour),
+                classes: text === 'Previous' ? 'shepherd-button-secondary' : ''
+            });
+
+            const createStep = (title, text, element, position, id) => {
+                let buttons = [];
+
+                if (element !== '#tutor') {
+                    buttons.push(createButton('Previous', tour.back));
+                }
+
+                const secondButtonText = element === '#done' ? 'Finish!' : 'Continue';
+                buttons.push(createButton(secondButtonText, tour.next));
+
+                return {
+                    title,
+                    text,
+                    attachTo: {
+                        element,
+                        on: position
+                    },
+                    buttons,
+                    id
+                };
+            };
+
+            const steps = [
+                createStep('Radicals Tutor', 'This is our radicals tutor!', '#tutor', 'top', 'tutor-step'),
+                createStep('Problem Types', 'You have several topics to choose from to master!', '#choose_interface', 'top', 'choose-interface-step'),
+                createStep('Adaptive Problem Selection', 'Based on your identified weakenesses, the Adapative section would recommend you problem types.', '#adaptive-button', 'bottom', 'adaptive-button-step'),
+                createStep('Progress Bar', 'Track your progress for the problem type here.', '#progress', 'bottom', 'progress-step'),
+                createStep('Study Material (Video)', 'We recommend looking at the provided videos to help you master the topic.', '#get_video', 'bottom', 'video-step'),
+                createStep('Study Material (Reading)', 'You can also checkout the readings.', '#get_read', 'bottom', 'read-step'),
+                createStep('More steps', 'You can break the problem down into more steps by clicking this button.', '#level_1', 'bottom', 'scaffold-step'),
+                createStep('Hints', 'If you get struck with a problem feel free to seek help from the hints. They\'re displayed in the text area right above.', '#get_hint', 'bottom', 'hint-step'),
+                createStep('Copy Answer', 'For each field, the last hint is the answer. You can copy it using this button.', '#copy_hint', 'bottom', 'answer-step'),
+                createStep('Done', 'Once you\'ve solved the problem click done to move on to the next problem.', '#done', 'bottom', 'done-step')
+            ];
+
+            // Add steps to the tour
+            steps.forEach(step => tour.addStep(step));
+
+            // Start the Tour
+            tour.start();
+        }
+
+        function log_hint(hint_type) {
+                $.ajax({
+                    type: "POST",
+                    url: "/log_hint",
+                    data: JSON.stringify({
+                        "user": "user1",
+                        "tutor": "{{tutor_type}}",
+                        "interface": interface,
+                        "start_state": start_state,
+                        "state": get_state(),
+                        "attempted": attempted,
+                        "action": hint_type,
+                        "hint": hint["hints"][hint_counter],
+                        "hint_counter": hint_counter,
+                    }),
+                    success: function (result) {
+                        // console.log(result)
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+            }
+
+    document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('scaffold') && event.target.tagName !== 'INPUT') {
+                // console.log('Scaffold clicked '+ event.target.tagName);
+                const currdiv = event.target.id;
+                scaffold(currdiv);
+                log_scaffold();
+            }
+    });
+
+    async function runTutorial() {
+                try {
+                    const tour = new Shepherd.Tour({
+                        useModalOverlay: true,
+                        defaultStepOptions: {
+                            scrollTo: false,
+                            cancelIcon: {
+                                enabled: true
+                            },
+                        }
+                    });
+
+                    const doneButton = document.getElementById('done');
+                    if (doneButton) {
+                        doneButton.addEventListener('click', () => {
+                            tour.complete();
+                        });
+                    }
+
+                    let nextHintResponse = await fetch('/get_hint', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            user: 'user1',
+                            tutor: '{{tutor_type}}',
+                            interface: interface,
+                            start_state: start_state,
+                            state: get_state(false),
+                            attempted: attempted,
+                            hints: null,
+                            hint_counter: 0
+                        }),
+                    });
+
+                    const step = tour.addStep({
+                        title: 'Tutorial Step',
+                        text: 'Initializing tutorial...',
+                        attachTo: {
+                            element: 'body',
+                            on: 'top',
+                        },
+                        buttons: [
+                            {
+                                text: 'Next',
+                                action: async function () {
+                                    await updateStep(tour, step);
+                                },
+                            },
+                        ],
+                    });
+
+                    tour.start();
+                    await updateStep(tour, step);
+
+                } catch (error) {
+                    console.error('Error running tutorial:', error);
+                }
+            }
+
+            let isUpdating = false; 
+
+            async function updateStep(tour, step) {
+                if (isUpdating){
+                    console.warn("Step update already in progress. Ignore additional request")
+                    return;
+                }
+                isUpdating = true;
+
+                const response = await fetch('/get_hint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        user: 'user1',
+                        tutor: '{{tutor_type}}',
+                        interface: interface,
+                        start_state: start_state,
+                        state: get_state(false),
+                        attempted: attempted,
+                        hints: null,
+                        hint_counter: 0
+                    }),
+                });
+
+
+                if (!response.ok) {
+                    console.warn('No more hints. Ending tutorial.');
+                    tour.complete();
+                    isUpdating = false;
+                    return;
+                }
+
+                const hintData = await response.json();
+                // console.log(hintData)
+                const fieldId = hintData.selection;
+                const hintText = hintData.hints.slice(1, -1).join('<br>');
+                const correctAnswer = hintData.hints[hintData.hints.length - 1];
+
+                const field = findFirstIncompleteField(fieldId);
+                if (!field) {
+                    console.error(`No matching field found for fieldId: ${fieldId}`);
+                    tour.complete();
+                    isUpdating = false;
+                    return;
+                }
+                field.classList.add('hint_field');
+
+                const isDoneStep = fieldId === 'done';
+
+                const backslashIndex = correctAnswer.indexOf("\\(");
+                const closingParenthesisIndex = correctAnswer.indexOf("\\)");
+                const answerMatch = correctAnswer.substring(backslashIndex + 2, closingParenthesisIndex);
+
+                if (answerMatch && !isDoneStep) {
+                    if (field.type === 'checkbox') {
+                        field.checked = true; // Set the checkbox
+                    } else {
+                        $(field).val(answerMatch).change();
+                    }
+                    check_correctness({ target: field });
+                }
+
+                labelText = getLabelForField(field.id)
+                if (labelText.length > 50) {
+                    labelText = "Next Step:"
+                }
+
+                step.updateStepOptions({
+                    title: isDoneStep ? 'Almost Done!' : `${labelText}`,
+                    text: isDoneStep
+                        ? 'Click the "Done" button to complete the tutorial.'
+                        : hintText,
+                    attachTo: {
+                        element: isDoneStep ? '#done' : `#${field.id}`,
+                        on: 'bottom',
+                    },
+                    buttons: [
+                        {
+                            text: isDoneStep ? 'Finish' : 'Next',
+                            action: async function () {
+                                if (isDoneStep) {
+                                    tour.complete();
+                                    return;
+                                }
+
+                                await updateStep(tour, step);
+                            },
+                        },
+                    ],
+                });
+                MathJax.typesetPromise();
+                step.show();
+                isUpdating = false;
+            }
+
+
+            const tutorialButton = document.getElementById('solve_for_me');
+            if (tutorialButton) {
+                tutorialButton.addEventListener('click', () => {
+                    runTutorial();
+                });
+            }
+
+            function getLabelForField(fieldId) {
+                let field = document.getElementById(fieldId);
+
+                if (!field) {
+                    console.warn(`Field not found: ${fieldId}`);
+                    return fieldId; // Return the field ID as fallback
+                }
+
+                // Check for a data-column attribute to find the corresponding column header
+                let column = field.getAttribute('data-column');
+                if (column) {
+                    // Locate the <p> element in the corresponding column header row
+                    let header = document.querySelector(`.row:first-of-type .col:nth-child(${column}) p`);
+                    if (header) {
+                        return header.textContent.trim();
+                    }
+                }
+
+                // Check for a label with the `for` attribute linked to the field ID
+                let label = document.querySelector(`label[for='${fieldId}']`);
+                if (label) {
+                    return label.textContent.trim();
+                }
+
+                // Traverse up the DOM to find a containing .col, .col-sm, or .row with descriptive text
+                let parentElement = field.closest(".col, .col-sm, .row");
+                if (parentElement) {
+                    // Look for a <p> or <label> in the parent container
+                    let description = parentElement.querySelector("p");
+                    if (description) {
+                        return description.textContent.trim();
+                    }
+
+                    label = parentElement.querySelector("label");
+                    if (label) {
+                        return label.textContent.trim();
+                    }
+                }
+
+                return "Next Step:";
+            }
+
+
+            function findFirstIncompleteField(baseFieldId) {
+                const indexedFields = document.querySelectorAll(`[id^='${baseFieldId}_']`);
+                for (const field of indexedFields) {
+                    if (field.type === 'checkbox' && !field.checked) {
+                        return field;
+                    }
+                    if (field.type !== 'checkbox' && (!field.value || field.value.trim() === '')) {
+                        return field;
+                    }
+                }
+
+                // If no indexed fields are found, fallback to a direct ID match (e.g., baseFieldId)
+                const directField = document.getElementById(baseFieldId);
+                if (directField) {
+                    if (directField.type === 'checkbox' && !directField.checked) {
+                        return directField;
+                    }
+                    if (directField.type !== 'checkbox' && (!directField.value || directField.value.trim() === '')) {
+                        return directField;
+                    }
+                }
+
+                return null;
+            }
+    $().ready(function(){
+            // $('#tutorial').click(tutorial);
+            $("#tutorial").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_tutorial",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(false),
+                                    "attempted": attempted,
+                                    "mode": "READ"
+                                }),
+                            success: function(result) {
+                                    tutorial();
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+
+            get_next_problem();
+            // Styling input box
+            $("#get_hint").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_hint",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(false),
+                                    "attempted": attempted,
+                                    "hints": hint,
+                                    "hint_counter": hint_counter
+                                }),
+                            success: function(result) {
+                                    if(JSON.stringify(hint) === JSON.stringify(result)){
+                                        hint_counter = hint_counter + 1;
+                                        if (hint_counter >= hint.hints.length) { 
+                                            $("#previous_hint").addClass("btn-warning-highlight");
+                                            hint_counter = hint.hints.length - 1; // Keep it within bounds
+                                        }
+                                        update_hint();
+                                    }
+                                    else {
+                                        hint = result;
+                                        hint_counter = 0;
+                                        document.querySelectorAll('.hint_field').forEach(function(element) {
+                                            element.classList.remove('hint_field');
+                                        });
+                                        $("#" + hint['selection']).addClass("hint_field");
+                                        attempted[hint['selection']] = true;
+
+                                        $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#previous_hint").removeClass("btn-warning-highlight");
+                                        
+                                        update_hint();
+                                    }
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+
+            $("#get_video").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_video",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(false),
+                                    "attempted": attempted,
+                                    "mode": "VIDEO"
+                                }),
+                            success: function(result) {
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                    window.open(result["study_material"]["video"], '_blank');
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+
+            $("#get_read").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_read",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(false),
+                                    "attempted": attempted,
+                                    "mode": "READ"
+                                }),
+                            success: function(result) {
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                    // Handle Text Fragment in Browser
+                                    const anchor = document.createElement('a');
+                                    anchor.href = result["study_material"]["reading"];
+                                    anchor.target = '_blank';
+                                    document.body.appendChild(anchor);
+                                    anchor.click();
+                                    document.body.removeChild(anchor);
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+            
+            $("#copy_hint").click(function(e) {
+                copy_hint();
+                $('#copy_message').removeClass('hidden').fadeIn(200).delay(500).fadeOut(200, function() {
+                    $(this).addClass('hidden');
+                });
+            });    
+            $("#previous_hint").click(function(e) {
+                    hint_counter = hint_counter - 1;
+                    update_hint();
+                    e.preventDefault();
+                    log_hint("PREVIOUS_HINT")
+                });
+
+        });
+</script>
+{% endblock %}

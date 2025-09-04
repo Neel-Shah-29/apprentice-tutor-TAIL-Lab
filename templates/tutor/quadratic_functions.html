@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id="tutor-box" style="margin-bottom: 25% ;">
+    <div id="choose_interface" style="text-align: center; margin-top: 1%">
+        <div>
+            {% if interface_type == "adaptive" %}
+            <a class="btn btn-primary" id="adaptive-button" href="/{{ tutor_type }}">Adaptive Problem Selection</a>
+            {% else %}
+            <a class="btn btn-outline-primary"  id="adaptive-button" href="/{{ tutor_type }}">Adaptive Problem Selection</a>
+            {% endif %}
+            {% if interface_type == "characterstics_of_quadratic_functions" %}
+            <a class="btn btn-primary" href="/{{ tutor_type }}?interface=characterstics_of_quadratic_functions">Characterstics of Quadratic Function</a>
+            {% else %}
+            <a class="btn btn-outline-primary" href="/{{ tutor_type }}?interface=characterstics_of_quadratic_functions">Characterstics of Quadratic Function</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="mb-0" style="display: flex; justify-content: center; margin-top: 1%">
+        <row>
+            <button class="btn btn-danger", target="_blank", id="get_video">supplementary video</button>
+            <button class="btn btn-warning", target="_blank", id="get_read">textbook resource</button>
+        </row>
+    </div>
+    <div  id="progress" style="display: flex; justify-content: center; align-items: center;">
+        <div style="margin-top: 0.5%; width: 650px;">
+            <div><strong>My Progress</strong></div>
+            <div class="progress mb-3" style="height: 10px; margin-top: 1%;">
+                <div id="tutor_progress" class="progress-bar bg-danger" role="progressbar" style="height: 10px; width: {{ 0 }}%" aria-valuenow="{{ 0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+    <div id="tutor">
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center;">
+        <div style="margin: 1%; width: 650px;">
+            <div id="hint-box">
+                <div class="mb-3" style="display: block; justify-content: center; align-items: center;">
+                    <row>
+                        <div id="hint-area" class="textarea-like"></div>
+                    </row>
+                    <row style="display: flex; justify-content: right; margin-top: 3%;">
+                        <button disabled id="copy_hint" type="button" class="btn btn-outline-danger" style="margin-right: 2%;">Copy Answer</button>
+                        <button disabled id="previous_hint" type="button" class="btn btn-outline-primary" style="margin-right: 2%;">Previous Hint</button>
+                        <!-- <button disabled id="next_hint" type="button" class="btn btn-outline-primary" style="margin-right: 2%;">Next Hint</button> -->
+                        <button id="get_hint" type="button" class="btn btn-warning" style="margin-right: 2%;">Ask for Hint!</button>
+                        <button id="done" type="submit" class="btn btn-primary">Done!</button>
+                    </row>
+                    <row>
+                        <div id="copy_message" class="hidden">Answer has been successfully copied!</div>
+                    </row>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block footer %}
+<script>
+    var interface;
+    var start_state;
+    var hint_counter = 0
+    var hint;
+    var attempted;
+    
+    function get_state(){
+            state = {};
+
+            $('input').each(function(){
+                    let id = $(this).attr('id');
+                    if (typeof id !== 'undefined'){
+                            state[id] = $(this).data();
+                            if ($(this).prop('disabled') == true){
+                                    state[id]["value"] = $(this).val();
+                                }
+                            else{
+                                    state[id]["value"] = "";
+                                }
+                            state[id]['disabled'] = $(this).prop('disabled');
+                        }
+            });
+            $('math-field').each(function(){
+                    let id = $(this).attr('id');
+                    console.log("^^^^^^^^^^^")
+                    console.log(id)
+                    console.log("^^^^^^^^^^^")
+                    if (typeof id !== 'undefined'){
+                            state[id] = $(this).data();
+                            if ($(this).prop('disabled') == true){
+                                    state[id]["value"] = $(this).val();
+                                }
+                            else{
+                                    state[id]["value"] = "";
+                                }
+                            state[id]['disabled'] = $(this).prop('disabled');
+                        }
+            });
+            console.log(state)
+
+            return state;
+        }
+    
+
+    function update_hint(){
+            if (hint){
+                    var hint_text = hint["hints"][hint_counter];
+                    hint_text = hint_text.replace(/\\left\s*\{/g, "\\left(").replace(/\\right\s*\}/g, "\\right)");
+                    $('#hint-area').html(hint_text);
+                    MathJax.typeset([$('#hint-area').get(0)]);
+
+                    if(hint_counter > 0){
+                            $("#previous_hint").prop('disabled', false);
+                        }
+                    else{
+                            $("#previous_hint").prop('disabled', true);
+                        }
+
+                    if(hint_counter < hint['hints'].length - 1){
+                            $("#next_hint").prop('disabled', false);
+                        }
+                    else{
+                            $("#next_hint").prop('disabled', true);
+                        }
+                    if(hint_counter == hint['hints'].length - 1){
+                            $("#copy_hint").prop('disabled', false);
+                        }
+                    else{
+                            $("#copy_hint").prop('disabled', true);
+                        }
+                }
+            else{
+                    $('#hint-area').val("");
+                    $("#copy_hint").prop('disabled', true);
+                    $("#previous_hint").prop('disabled', true);
+                    $("#next_hint").prop('disabled', true);
+                }
+        }
+
+    function copy_hint(){
+            const $textarea = $('<textarea></textarea>');
+            const str = hint["hints"][hint_counter];
+            const backslashIndex = str.indexOf("\\\(");;
+            const closingParenthesisIndex = str.indexOf("\\\)");
+            var substringBetween = str.substring(backslashIndex, closingParenthesisIndex+2);
+            $textarea.val(substringBetween);
+            $('body').append($textarea);
+            $textarea.select();
+            document.execCommand('copy');
+            $textarea.remove();
+    
+    }
+    function check_correctness(input_ele){
+            if ($(input_ele.target).prop('disabled') == true){
+                return;
+            }
+
+            // clear hint
+            $('math-field').removeClass("hint_field");
+            $('math-field').removeClass("incorrect_field");
+            $('input').removeClass("hint_field");
+            $('input').removeClass("incorrect_field")
+            $('button').removeClass("incorrect_field")
+            $('button').removeClass("hint_field");
+            hint = null;
+            hint_counter = 0;
+            update_hint();
+
+            if (($(input_ele.target).attr('type') != 'checkbox' &&$(input_ele.target).val() == "") ||
+                    ($(input_ele.target).attr('type') == 'checkbox' &&
+                            !$(input_ele.target).is(':checked'))
+                ){
+                    $(input_ele.target).removeClass("incorrect_field")
+                    return
+                }
+
+            let value = $(input_ele.target).val();
+            if ($(input_ele.target).attr('type') == 'checkbox' &&
+                    $(input_ele.target).is(':checked')){
+                    value = "checked";
+                }
+
+            $.ajax({
+                    type: "POST",
+                    url: "/check_correctness",
+                    data: JSON.stringify({
+                            "user": "user1",
+                            "tutor": "{{tutor_type}}",
+                            "interface": interface,
+                            "start_state": start_state,
+                            "state": get_state(),
+                            "selection": $(input_ele.target).attr('id'),
+                            "action": "input change",
+                            "input": value,
+                            "first_attempt": (attempted[$(input_ele.target).attr('id')] === undefined)
+                        }),
+                    success: function(correctness){
+                            attempted[$(input_ele.target).attr('id')] = true
+
+                            if(correctness["correct"]){
+                                    // color text green
+                                    $(input_ele.target).removeClass("incorrect_field").addClass("correct_field")
+                                    // lock elemenet
+                                    $(input_ele.target).prop('disabled', true);
+                                    // console.log("THIS IS CORRECT")
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                }
+                            else{
+                                    // color inout box red
+                                    // console.log($(input_ele.target))
+                                    $("#get_video").addClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").addClass("btn-warning-highlight") // Momin add line
+                                    $("#get_hint").addClass("btn-warning-highlight") // Momin add line
+                                    $(input_ele.target).removeClass("correct_field").addClass("incorrect_field")
+                                    // console.log("THIS IS INCORRECT")
+
+                                }
+                        },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+        }
+
+    function get_next_problem(){
+            $.ajax({
+                    type: "POST",
+                    url: "/next_problem",
+                    data: JSON.stringify({
+                            "user":"user1",
+                            "tutor":"{{tutor_type}}",
+                            "interface": "{{interface_type}}"
+                        }),
+                    success: function(problem){
+                            // console.log(problem)
+                            attempted = {};
+                            $.ajax({
+                                    type: "GET",
+                                    url: "/tutors/" + problem["interface"],
+                                    success: function(tutor_html){
+                                            
+                                            hint = null;
+                                            update_hint();
+                                            $('button').removeClass("hint_field");
+                                            $('button').removeClass("incorrect_field");
+                                            
+                                            $("#tutor").html(tutor_html).promise().done(function(){
+
+                                                    // scroll to top
+                                                    window.scrollTo(0, 0);
+
+                                                    // MathJax
+                                                    MathJax.typeset();
+                                                    
+                                                    interface = problem['interface'].split(".html")[0]
+                                                    start_state = problem["start_state"]
+                                                    
+                                                    for(var ele in problem["start_state"]){
+                                                            // console.log("!!!!!!")
+                                                            // console.log(ele)
+                                                            console.log(problem["start_state"][ele])
+                                                            $("#"+ele).val(problem["start_state"][ele])
+                                                        }
+                                                        
+                                                    var performance = problem["kc_progress"];
+                                                    console.log(performance)
+                                                    if (performance < 0.5) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-danger');
+                                                    } else if (performance < 0.75) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-warning');
+                                                    } else if (performance < 0.95) {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-primary');
+                                                    } else {
+                                                        $('#tutor_progress').removeClass('bg-danger').addClass('bg-success');
+                                                    }
+                                                    $('#tutor_progress').attr('aria-valuenow', performance * 100);
+                                                    $('#tutor_progress').css('width', performance * 100 + '%');
+                                                    
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "/get_image",
+                                                        data: JSON.stringify({
+                                                                "variables":problem["start_state"]["initial_problem"]
+                                                            }),
+                                                            success: function(result) {
+                                                                $("#quadraticGraph").attr("src", "data:image/png;base64," + result.image_base64);
+                                                            },
+                                                            error: function(){
+                                                                console.log("Error fetching the image.");
+                                                            },
+                                                            processData: false,
+                                                            contentType: "application/json",
+                                                    });
+                                                    console.log("STATE "+start_state["initial_problem"])
+                                                    
+                                                    $("#done").off('click');
+                                                    $("#done").click(function(input_ele){
+                                                            $.ajax({
+                                                                    type: "POST",
+                                                                    url: "/check_correctness",
+                                                                    data: JSON.stringify({
+                                                                            "user": "user1",
+                                                                            "tutor": "{{tutor_type}}",
+                                                                            "interface": interface,
+                                                                            "start_state": start_state,
+                                                                            "state": get_state(),
+                                                                            "selection": $(input_ele.target).attr('id'),
+                                                                            "action": "button click",
+                                                                            "input": "x",
+                                                                            "first_attempt": (attempted[$(input_ele.target).attr('id')] === undefined)
+                                                                        }),
+                                                                    success: function(correctness){
+                                                                            // console.log(input_ele)
+                                                                            // console.log($(input_ele.target))
+                                                                            attempted[$(input_ele.target).attr('id')] = true
+                                                                            $("#hint-area").html(""); //Momin line
+                                                                            if(correctness["correct"]){
+                                                                                    get_next_problem();
+                                                                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                                                                }
+                                                                            else{
+                                                                                    $("#get_video").addClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_read").addClass("btn-warning-highlight") // Momin add line
+                                                                                    $("#get_hint").addClass("btn-warning-highlight") // Momin add line
+                                                                                    // color inout box red
+                                                                                    $(input_ele.target).addClass("incorrect_field")
+                                                                                }
+                                                                        },
+                                                                    dataType: "json",
+                                                                    contentType: "application/json"
+                                                                });
+                                                        });
+
+                                                    $("input").change(check_correctness);
+                                                    $("math-field").change(check_correctness);
+
+                                                });
+                                        },
+                                });
+
+                        },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+        }
+
+        function tutorial() {
+            const tour = new Shepherd.Tour({
+                useModalOverlay: true,
+                defaultStepOptions: {
+                    scrollTo: false,
+                    cancelIcon: {
+                                enabled: true
+                            },
+                    }
+            });
+
+            const createButton = (text, action) => ({
+                text,
+                action: () => action.call(tour),
+                classes: text === 'Previous' ? 'shepherd-button-secondary' : ''
+            });
+
+            const createStep = (title, text, element, position, id) => {
+                let buttons = [];
+
+                if (element !== '#tutor') {
+                    buttons.push(createButton('Previous', tour.back));
+                }
+
+                const secondButtonText = element === '#done' ? 'Finish!' : 'Continue';
+                buttons.push(createButton(secondButtonText, tour.next));
+
+                return {
+                    title,
+                    text,
+                    attachTo: {
+                        element,
+                        on: position
+                    },
+                    buttons,
+                    id
+                };
+            };
+
+            const steps = [
+                createStep('Quadratic Functions Tutor', 'This is our quadratic functions tutor!', '#tutor', 'top', 'tutor-step'),
+                createStep('Problem Types', 'You have several topics to choose from to master!', '#choose_interface', 'top', 'choose-interface-step'),
+                createStep('Adaptive Problem Selection', 'Based on your identified weakenesses, the Adapative section would recommend you problem types.', '#adaptive-button', 'bottom', 'adaptive-button-step'),
+                createStep('Progress Bar', 'Track your progress for the problem type here.', '#progress', 'bottom', 'progress-step'),
+                createStep('Study Material (Video)', 'We recommend looking at the provided videos to help you master the topic.', '#get_video', 'bottom', 'video-step'),
+                createStep('Study Material (Reading)', 'You can also checkout the readings.', '#get_read', 'bottom', 'read-step'),
+                createStep('Hints', 'If you get struck with a problem feel free to seek help from the hints. They\'re displayed in the text area right above.', '#get_hint', 'bottom', 'hint-step'),
+                createStep('Copy Answer', 'For each field, the last hint is the answer. You can copy it using this button.', '#copy_hint', 'bottom', 'answer-step'),
+                createStep('Done', 'Once you\'ve solved the problem click done to move on to the next problem.', '#done', 'bottom', 'done-step')
+            ];
+
+            // Add steps to the tour
+            steps.forEach(step => tour.addStep(step));
+
+            // Start the Tour
+            tour.start();
+        }
+
+        function log_hint(hint_type) {
+                $.ajax({
+                    type: "POST",
+                    url: "/log_hint",
+                    data: JSON.stringify({
+                        "user": "user1",
+                        "tutor": "{{tutor_type}}",
+                        "interface": interface,
+                        "start_state": start_state,
+                        "state": get_state(),
+                        "attempted": attempted,
+                        "action": hint_type,
+                        "hint": hint["hints"][hint_counter],
+                        "hint_counter": hint_counter,
+                    }),
+                    success: function (result) {
+                        // console.log(result)
+                    },
+                    error: function (result) {
+                        console.log(result);
+                    },
+                    dataType: "json",
+                    contentType: "application/json"
+                });
+
+            }
+
+    $().ready(function(){
+            // $("#tutorial").click(tutorial);
+            $("#tutorial").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_tutorial",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(),
+                                    "attempted": attempted,
+                                    "mode": "READ"
+                                }),
+                            success: function(result) {
+                                    tutorial();
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+            get_next_problem();
+            // Styling input box
+            
+
+            $("#get_hint").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_hint",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(),
+                                    "attempted": attempted,
+                                    "hints": hint,
+                                    "hint_counter": hint_counter
+                                }),
+                            success: function(result) {
+                                    if(JSON.stringify(hint) === JSON.stringify(result)){
+                                        hint_counter = hint_counter + 1;
+                                        if (hint_counter >= hint.hints.length) { 
+                                            $("#previous_hint").addClass("btn-warning-highlight");
+                                            hint_counter = hint.hints.length - 1; // Keep it within bounds
+                                        }
+                                        update_hint();
+                                    }
+                                    else {
+                                        hint = result;
+                                        hint_counter = 0;
+                                        document.querySelectorAll('.hint_field').forEach(function(element) {
+                                            element.classList.remove('hint_field');
+                                        });
+                                        $("#" + hint['selection']).addClass("hint_field");
+                                        attempted[hint['selection']] = true;
+
+                                        $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                        $("#previous_hint").removeClass("btn-warning-highlight");
+                                        
+                                        update_hint();
+                                    }
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+
+            $("#get_video").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_video",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(),
+                                    "attempted": attempted,
+                                    "mode": "VIDEO"
+                                }),
+                            success: function(result) {
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line   
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                    window.open(result["study_material"]["video"], '_blank');
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+
+            $("#get_read").click(function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                            type: "POST",
+                            url: "/get_read",
+                            data: JSON.stringify({
+                                    "user":"user1",
+                                    "tutor":"{{tutor_type}}",
+                                    "interface": interface,
+                                    "start_state": start_state,
+                                    "state": get_state(),
+                                    "attempted": attempted,
+                                    "mode": "READ"
+                                }),
+                            success: function(result) {
+                                    $("#get_hint").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_read").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#get_video").removeClass("btn-warning-highlight") // Momin add line
+                                    $("#previous_hint").removeClass("btn-warning-highlight");
+                                    // Handle Text Fragment in Browser
+                                    const anchor = document.createElement('a');
+                                    anchor.href = result["study_material"]["reading"];
+                                    anchor.target = '_blank';
+                                    document.body.appendChild(anchor);
+                                    anchor.click();
+                                    document.body.removeChild(anchor);
+                                    // window.open(result["study_material"]["reading"], '_blank');
+                                },
+                            error: function(result) {
+                                    console.log(result);
+                                },
+                            dataType: "json",
+                            contentType: "application/json"
+                        });
+                });
+            
+            $("#copy_hint").click(function(e) {
+                    copy_hint();
+                    $('#copy_message').removeClass('hidden').fadeIn(200).delay(500).fadeOut(200, function() {
+                        $(this).addClass('hidden');
+                    });
+                });
+            $("#previous_hint").click(function(e) {
+                    hint_counter = hint_counter - 1;
+                    update_hint();
+                    e.preventDefault();
+                    log_hint("PREVIOUS_HINT")
+                });
+
+
+        });
+</script>
+{% endblock %}

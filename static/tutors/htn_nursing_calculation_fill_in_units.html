@@ -1,0 +1,95 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Calculate the appropriate dosage</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display: none;">
+                    <div style="text-align: center; width: 500px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row">
+                <p><strong>Fill in each unit of measurement:</strong></p>
+            <div class="row">
+                <div class="col-sm" >
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac1_num_value" data-column="1" data-row="1" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit1_num">unit</span>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac1_den_value" data-column="1" data-row="2" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit1_den">unit</span>
+                    </div>
+                </div>
+                <div class="col-sm" style="margin-top:25px">
+                    x
+                </div>
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac2_num_value" data-column="3" data-row="1" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit2_num">unit</span>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac2_den_value" data-column="3" data-row="2" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit2_den">unit</span>
+                    </div>
+                </div>
+                <div class="col-sm" style="margin-top:25px">
+                    x
+                </div>
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac3_num_value" data-column="3" data-row="1" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit3_num">unit</span>
+                    </div>
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <math-field id="frac3_den_value" data-column="3" data-row="2" class="form-control" value=""
+                            style="width: 75px; margin-bottom: 5px;"></math-field><span id="unit3_den">unit</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    
+    $(document).ready(function() {
+        const initial_problem = $('#initial_problem').val(); 
+        // console.log(initial_problem)
+        const prob = initial_problem.split(',');
+        // [n1, u1, n2, u2, u3, words, n3]
+        const problem = prob[0];
+        const n1 = parseFloat(prob[1]);
+        const u1 = prob[2];
+        const n2 = parseFloat(prob[3]); 
+        const u2 = prob[4]; 
+        const u3 = prob[5]; 
+        const n3 = parseFloat(prob[6])
+        // console.log(u1, u2, u3, 'dose', 'day')
+
+        $('#unit1_num').text(u1);
+        $('#unit1_den').text('day');
+        $('#unit2_num').text(u3);
+        $('#unit2_den').text(u1);
+        $('#unit3_num').text('day');
+        $('#unit3_den').text('dose');
+    });
+</script>

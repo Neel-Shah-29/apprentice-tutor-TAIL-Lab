@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block extraheader %} {% endblock %}
+
+{% block title %} Sign In {% endblock %}
+{% block heading %}Sign In {% endblock %}
+
+{% block content %}
+<style>
+html,
+body {
+    height: 100%;
+}
+
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+        margin-top: 10%;
+    }
+
+    .form-signin .checkbox {
+        font-weight: 400;
+    }
+
+    .form-signin .form-floating:focus-within {
+        z-index: 2;
+    }
+
+    .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+
+    .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+</style>
+
+<main class="form-signin">
+    <hr>
+    <h4 class="h4 mb-3 fw-normal">To sign in, please connect via a link from your Blackboard Learn Portal</h4>
+    <hr>
+
+    <form method="POST" action="{{ url_for('login') }}">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+        <div class="form-floating">
+            <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com" disabled="true">
+            <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" disabled="true">
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me" name="remember"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" disabled="true">Sign in</button>
+    </form>
+</main>
+{% endblock %}
+
+
+{% block footer %}
+<script>
+    function enable_fields(){
+        $('input').prop('disabled', false);
+        $('button').prop('disabled', false);
+    }
+
+    //   $().ready(function(){
+    //     $.ajax({
+    //       type: "POST",
+    //       url: "/api",
+    //       data: JSON.stringify({"hello":"world"}),
+    //       success: function(data){
+    //         console.log(data)
+    //       },
+    //       dataType: "json",
+    //       contentType: "application/json"
+    //     });
+    //   });
+</script>
+{% endblock %}

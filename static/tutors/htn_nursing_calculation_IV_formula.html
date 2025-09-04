@@ -1,0 +1,197 @@
+<div style="display: flex; justify-content: center; align-items: center;">
+    <form class="" style="width: 650px;">
+
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Calculate the appropriate dosage using the Formula Method</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                </div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control"
+                        style="width: 500px; display: none;">
+                    <div style="text-align: center; width: 500px;" id="initial_problem_text"></div>
+                </div>
+                <div class="col-sm">
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_1" style="margin: 2%; display:none; margin-bottom: 25px">
+            <p><strong>What is the formula?</strong></p>
+            <div class="row">
+                <div class="col">
+                    <select id="formula_numerator1" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a factor</option>
+                        <option value="volume">volume (V)</option>
+                        <option value="time">time (T)</option>
+                        <option value="drop factor">drop factor (C)</option>
+                        <option value="drip rate">drip rate (gtt/min)</option>
+                        <option value="1">1</option>
+                    </select>
+                    <select id="formula_denominator1" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a factor</option>
+                        <option value="volume">volume (V)</option>
+                        <option value="time">time (T)</option>
+                        <option value="drop factor">drop factor (C)</option>
+                        <option value="drip rate">drip rate (gtt/min)</option>
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div class="col" style="display: flex;
+                                justify-content: center;
+                                align-items: center;">
+                    <strong>x</strong>
+                </div>
+                <div class="col">
+                    <select id="formula_numerator2" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a factor</option>
+                        <option value="volume">volume (V)</option>
+                        <option value="time">time (T)</option>
+                        <option value="drop factor">drop factor (C)</option>
+                        <option value="drip rate">drip rate (gtt/min)</option>
+                        <option value="1">1</option>
+                    </select>
+                    <select id="formula_denominator2" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a factor</option>
+                        <option value="volume">volume (V)</option>
+                        <option value="time">time (T)</option>
+                        <option value="drop factor">drop factor (C)</option>
+                        <option value="drip rate">drip rate (gtt/min)</option>
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div class="col" style="display: flex;
+                                justify-content: center;
+                                align-items: center;">
+                    <strong>=</strong>
+                </div>
+                <div class="col" style="display: flex;
+                justify-content: center;
+                align-items: center;">
+                    <select id="formula_result" style="height: 40px;width: 150px;">
+                        <option value="" selected disabled hidden>Select a factor</option>
+                        <option value="volume">volume (V)</option>
+                        <option value="time">time (T)</option>
+                        <option value="drop factor">drop factor (C)</option>
+                        <option value="drip rate">drip rate (gtt/min)</option>
+                        <option value="1">1</option>
+                    </select>
+                </div>
+                <div class="col-sm">
+                    <button id="level_2" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container level_2" style="margin: 2%; display:none; margin-bottom: 25px">
+            <div class="row">
+                <p><strong>Fill in the information given from the problem.</strong></p>
+            </div>
+            <div class="row">
+                <div class="col-sm">
+                    <div class="row" style="flex-wrap: nowrap;align-items: center;">
+                        <div class="col">
+                            <math-field id="fill_in_volume" data-column="1" data-row="1" class="form-control" value=""
+                                style="width: 75px; margin-bottom: 5px;"></math-field>
+                            <math-field id="fill_in_time" data-column="1" data-row="1" class="form-control" value=""
+                                style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                        <div class="col">
+                            <strong>x</strong>
+                        </div>
+                        <div class="col">
+                            <math-field id="fill_in_drop_factor" data-column="1" data-row="1" class="form-control"
+                                value="" style="width: 75px; margin-bottom: 5px;"></math-field>
+                            <math-field id="fill_in_one" data-column="1" data-row="1" class="form-control" value=""
+                                style="width: 75px; margin-bottom: 5px;"></math-field>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <button id="level_3" class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_3" style="margin: 2%; display:none;">
+            <p><strong>Multiply</strong></p>
+            <div class="row" style="flex: auto;">
+                <div class="col-sm" style="margin-top: 1%;">
+                    <div class="row" style="flex: auto; padding-bottom: 25px;">
+                        <label for="multiply_numerator">Numerator:</label>
+                    </div>
+                    <div class="row" style="flex: auto;">
+                        <label for="multiply_denominator">Denominator:</label>
+                    </div>
+                </div>
+                <div class="col-sm" style="margin-top: 1%;">
+                    <div class="row" style="flex: auto;">
+                        <math-field id="multiply_numerator" virtual-keyboard-mode="off"
+                            style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                    <div class="row" style="flex: auto;">
+                        <math-field id="multiply_denominator" virtual-keyboard-mode="off"
+                            style="width: 250px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container level_0" style="margin: 2%;">
+            <div class="row">
+                <div class="col-sm">
+                    <label for="final_answer">What is the final dosage?</label>
+                    <math-field id="final_answer" virtual-keyboard-mode="onfocus"
+                        style="width: 569px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+                </div>
+                <div class="col-sm">
+                    <button id="level_1" style="margin-left:-10px;margin-top:43px"
+                        class="btn btn-danger scaffold">+</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function updateUnits() {
+        var frac1Numerator = ($('#frac1_numerator').val() == null) ? "unit" : $('#frac1_numerator').val();
+        var frac1Denominator = ($('#frac1_denominator').val() == null) ? "unit" : $('#frac1_denominator').val();
+        var frac2Numerator = ($('#frac2_numerator').val() == null) ? "unit" : $('#frac2_numerator').val();
+        var frac2Denominator = ($('#frac2_denominator').val() == null) ? "unit" : $('#frac2_denominator').val();
+        var frac3Numerator = ($('#frac3_numerator').val() == null) ? "unit" : $('#frac3_numerator').val();
+        var frac3Denominator = ($('#frac3_denominator').val() == null) ? "unit" : $('#frac3_denominator').val();
+        var finalAnswerNumerator = ($('#final_answer_numerator_units').val() == null) ? "unit" : $('#final_answer_numerator_units').val();
+        var finalAnswerDenominator = ($('#final_answer_denominator_units').val() == null) ? "unit" : $('#final_answer_denominator_units').val();
+
+        // console.log('Values:', frac1Numerator, frac1Denominator, frac2Numerator, frac2Denominator, finalAnswerNumerator, finalAnswerDenominator);
+
+        $('#unit1_num').text(frac1Numerator);
+        $('#unit1_den').text(frac1Denominator);
+        $('#unit2_num').text(frac2Numerator);
+        $('#unit2_den').text(frac2Denominator);
+        $('#unit3_num').text(frac3Numerator);
+        $('#unit3_den').text(frac3Denominator);
+        $('#unit_product_num').text(finalAnswerNumerator);
+        $('#unit_product_den').text(finalAnswerDenominator);
+    }
+
+    function toggleConvert() {
+        // console.log('toggle')
+        $('#yes_convert_units').toggle();
+    }
+
+    $(document).ready(function () {
+        $('#final_answer_numerator_units, #final_answer_denominator_units, #frac1_numerator, #frac1_denominator, #frac2_numerator, #frac2_denominator, #frac3_numerator, #frac3_denominator').change(updateUnits);
+        $('#yes_convert').change(toggleConvert);
+    });
+
+</script>
