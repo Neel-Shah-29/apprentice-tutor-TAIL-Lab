@@ -1,126 +1,129 @@
 <div style="display: flex; justify-content: center; align-items: center;">
-  <form class="" style="width: 650px;">
-
-    <div class="container" style="margin: 3%;">
-      <div class="row">
-        <div class="col-sm">
-          <div style="text-align: center;">
-            <h3>Geometry — Solve Triangle (sides/angles)</h3>
-            <br>
-            <h4>Given:</h4>
-          </div>
+    <form style="width: 650px;">
+        <div class="container" style="margin: 3%;">
+            <div class="row">
+                <div class="col-sm">
+                    <div style="text-align: center;">
+                        <h3>Solve Triangle (Sides/Angles)</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm"></div>
+                <div class="col-sm">
+                    <input disabled type="text" id="initial_problem" class="form-control" style="display:none;">
+                    <div id="initial_problem_text" style="text-align: center; width: 500px;"></div>
+                </div>
+                <div class="col-sm"></div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm"></div>
-        <div class="col-sm" style="width: 250px">
-          <math-field disabled="true" id="initial_problem" style="width: 360px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
+        <div class="container level_0" style="margin: 2%;">
+            <div class="form-group">
+                <label for="side_a">Side a:</label>
+                <input type="number" id="side_a" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="side_b">Side b:</label>
+                <input type="number" id="side_b" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="side_c">Side c:</label>
+                <input type="number" id="side_c" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_A">Angle A (deg):</label>
+                <input type="number" id="angle_A" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_B">Angle B (deg):</label>
+                <input type="number" id="angle_B" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="angle_C">Angle C (deg):</label>
+                <input type="number" id="angle_C" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="right_triangle">Is this a right triangle?</label>
+                <select id="right_triangle" class="form-control">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="area_requested">Is area requested?</label>
+                <select id="area_requested" class="form-control">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                </select>
+            </div>
         </div>
-        <div class="col-sm"></div>
-      </div>
-    </div>
-
-    <!-- Level 1: Normalize + Classify -->
-    <div class="container level_1" style="margin: 2%; display:none;">
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Normalize inputs (write OK):</label>
-          <math-field id="normalize_inputs" class="level_2" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-          <div style="margin-left: 10px;"><button id="level_2" class="btn btn-danger scaffold">+</button></div>
+        <div class="container level_0" style="margin: 2%;">
+            <div class="form-group">
+                <label for="normalize_inputs">Normalize Inputs:</label>
+                <input type="text" id="normalize_inputs" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="classify_triangle">Classify Triangle:</label>
+                <input type="text" id="classify_triangle" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="apply_pythagorean">Apply Pythagorean:</label>
+                <input type="text" id="apply_pythagorean" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="use_trig_ratios">Use Trig Ratios:</label>
+                <input type="text" id="use_trig_ratios" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="resolve_ssa_ambiguity">Resolve SSA Ambiguity:</label>
+                <input type="text" id="resolve_ssa_ambiguity" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="compute_missing_angles">Compute Missing Angles:</label>
+                <input type="text" id="compute_missing_angles" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="compute_missing_sides">Compute Missing Sides:</label>
+                <input type="text" id="compute_missing_sides" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="compute_unknown_by_cosine">Compute Unknown By Cosine:</label>
+                <input type="text" id="compute_unknown_by_cosine" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="backfill_with_sines_if_needed">Backfill With Sines If Needed:</label>
+                <input type="text" id="backfill_with_sines_if_needed" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="map_correspondence">Map Correspondence:</label>
+                <input type="text" id="map_correspondence" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="scale_sides_angles">Scale Sides/Angles:</label>
+                <input type="text" id="scale_sides_angles" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="select_area_formula">Select Area Formula:</label>
+                <input type="text" id="select_area_formula" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="compute_area">Compute Area:</label>
+                <input type="text" id="compute_area" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="consistency_checks">Consistency Checks:</label>
+                <input type="text" id="consistency_checks" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="report_solution">Report Solution:</label>
+                <input type="text" id="report_solution" class="form-control">
+            </div>
         </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Classify (RightTriangleTrig / LawOfSines / LawOfCosines / SimilarityScaling / AreaRelations):</label>
-          <input id="classify_triangle" class="level_2" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"/>
-        </div>
-      </div>
-    </div>
-
-    <!-- Level 2: Method-specific core step(s) -->
-    <div class="container level_2" style="margin: 2%; display:none;">
-      <p><strong>Right-triangle step(s)</strong></p>
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Pythagorean (enter c):</label>
-          <math-field id="apply_pythagorean" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Trig ratios (enter sin A):</label>
-          <math-field id="use_trig_ratios" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <hr>
-      <p><strong>Law of Sines step(s)</strong></p>
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">SSA ambiguity (unique/ambiguous):</label>
-          <input id="resolve_ssa_ambiguity" class="" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"/>
-        </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Compute missing angle (enter B):</label>
-          <math-field id="compute_missing_angles" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Compute missing side (enter b):</label>
-          <math-field id="compute_missing_sides" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <hr>
-      <p><strong>Law of Cosines step(s)</strong></p>
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Cosine formula (enter c):</label>
-          <math-field id="compute_unknown_by_cosine" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Backfill with sines (write OK):</label>
-          <math-field id="backfill_with_sines_if_needed" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <hr>
-      <p><strong>Similarity step(s)</strong></p>
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Map correspondence (e.g., A→A'):</label>
-          <input id="map_correspondence" class="" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"/>
-        </div>
-      </div>
-      <div class="row" style="display: flex; align-items: center; margin-top: 10px;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Scale sides/angles (enter scaled side):</label>
-          <math-field id="scale_sides_angles" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-        </div>
-      </div>
-      <hr>
-      <p><strong>Area relation step(s)</strong></p>
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Select area formula (write it or OK):</label>
-          <input id="select_area_formula" class="" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"/>
-        </div>
-      </div>
-    </div>
-
-    <!-- Level 0: Final numeric piece -->
-    <div class="container level_0" style="margin: 2%;">
-      <div class="row" style="display: flex; align-items: center;">
-        <div class="col" style="display: flex; align-items: center;">
-          <label class="form-label" style="width: 300px; margin-right: 20px">Compute final value (area or last side):</label>
-          <math-field id="compute_area" class="level_1" virtual-keyboard-mode="onfocus" style="width: 220px; border: 1px solid rgba(0, 0, 0, .3);"></math-field>
-          <div style="margin-left: 10px;"><button id="level_1" class="btn btn-danger scaffold">+</button></div>
-        </div>
-      </div>
-    </div>
-
-  </form>
+    </form>
 </div>
-
+<script>
+    $(document).ready(function() {
+        const text = $('#initial_problem').val();
+        $('#initial_problem_text').text(text);
+    });
+</script>

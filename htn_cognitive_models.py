@@ -133,19 +133,37 @@ class HTNCognitiveModel:
         
         print("FSTATE", fstate)
         print("HINT", effect)
-        hints = list()
+
+        # If the planner returns False, the problem is already solved and no
+        # further hint can be generated.  Treat this as the "done" state so the
+        # UI can prompt the learner to submit the final answer instead of
+        # crashing with a TypeError when indexing into `effect`.
+        if not effect:
+            return {
+                'selection': 'done',
+                'hints': ['Click the button to submit your answer.'],
+                'input': 'done',
+                'knowledge_components': []
+            }
+
+        hints = []
         if effect['field'] != 'done':
             for kc in effect['kc']:
                 hints.extend(self.hints[kc])
 
-        response = {'selection':effect['field'], 'hints':['Try updating this field next.', *hints],
-                    'input':effect['field'], 'knowledge_components':[self.kc_mapping[kcx] for kcx in effect['kc']]}
-        
-        if effect['field'] == 'done':
-            response['hints'] = ['Click the button to submit your answer.',]
-        else:
-            response['hints'].append('Enter the value {} in this field.'.format("\\({}\\)".format(effect['value'][0][1])))
+        response = {
+            'selection': effect['field'],
+            'hints': ['Try updating this field next.', *hints],
+            'input': effect['field'],
+            'knowledge_components': [self.kc_mapping[kcx] for kcx in effect['kc']]
+        }
 
+        if effect['field'] == 'done':
+            response['hints'] = ['Click the button to submit your answer.']
+        else:
+            response['hints'].append(
+                'Enter the value {} in this field.'.format("\\({}\\)".format(effect['value'][0][1]))
+            )
 
         return response
         
