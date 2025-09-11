@@ -23,15 +23,15 @@ def htn_geometry_solve_triangle_problem():
     """
     scenarios = [
         # Right triangle trig (SOH/CAH/TOA + Pythagorean)
-        "Right triangle: a=3, b=4. Find c and sin A.",
+        "Right triangle: a=3, b=4",
         # Law of Sines (ASA)
-        "ASA: A=30, C=60, a=10. Find B and b.",
+        "ASA: A=30, C=60, a=10",
         # Law of Cosines (SAS)
-        "SAS: a=7, b=8, C=60. Find c.",
+        "SAS: a=7, b=8, C=60.",
         # Similarity scaling
-        "SIM: scale=2, AB=5. Find A'B'.",
+        "SIM: scale=2, AB=5.",
         # Area relation 1/2 ab sin C
-        "AREA: a=8, b=10, C=30. Find area.",
+        "AREA: a=8, b=10, C=30",
     ]
     return choice(scenarios)
 
@@ -70,18 +70,51 @@ def normalize_inputs(init_value):
 
 
 def classify_triangle(init_value):
-    if _any_match(r"^\s*Right triangle", init_value):
-        return tuple([(re.compile(r"RightTriangleTrig", re.I), "RightTriangleTrig")])
-    if _any_match(r"^\s*ASA\s*:", init_value) or _any_match(r"^\s*AAS\s*:", init_value) or _any_match(r"\bSSA\b", init_value):
-        return tuple([(re.compile(r"LawOfSines", re.I), "LawOfSines")])
-    if _any_match(r"^\s*SAS\s*:", init_value) or _any_match(r"^\s*SSS\s*:", init_value):
-        return tuple([(re.compile(r"LawOfCosines", re.I), "LawOfCosines")])
-    if _any_match(r"^\s*SIM\s*:", init_value):
-        return tuple([(re.compile(r"SimilarityScaling", re.I), "SimilarityScaling")])
-    if _any_match(r"^\s*AREA\s*:", init_value):
-        return tuple([(re.compile(r"AreaRelations", re.I), "AreaRelations")])
-    # Fallback
-    return tuple([(re.compile(r"LawOfSines", re.I), "LawOfSines")])
+    # Accept user-friendly labels while constraining to the scenario in the prompt.
+    # We return multiple acceptable patterns but one concise hint string.
+    def pack(patterns, hint):
+        return tuple([(re.compile(pat, re.I), hint) for pat in patterns])
+
+    if _any_match(r"^\s*Right\s*triangle", init_value):
+        return pack([
+            r"righttriangletrig",
+            r"right\s*triangle",
+            r"right",
+            r"right-?angled",
+            r"rt|rtt"
+        ], "Right triangle (Right / RightTriangleTrig)")
+    if (_any_match(r"^\s*ASA\s*:\s*", init_value)
+        or _any_match(r"^\s*AAS\s*:\s*", init_value)
+        or _any_match(r"\bSSA\b", init_value)):
+        return pack([
+            r"law\s*of\s*sines",
+            r"sines",
+            r"los|sin"
+        ], "Law of Sines (Sines)")
+    if _any_match(r"^\s*SAS\s*:\s*", init_value) or _any_match(r"^\s*SSS\s*:\s*", init_value):
+        return pack([
+            r"law\s*of\s*cosines",
+            r"cosines",
+            r"loc|cos"
+        ], "Law of Cosines (Cosines)")
+    if _any_match(r"^\s*SIM\s*:\s*", init_value):
+        return pack([
+            r"similarity\s*scaling",
+            r"similarity",
+            r"sim"
+        ], "Similarity (Scaling)")
+    if _any_match(r"^\s*AREA\s*:\s*", init_value):
+        return pack([
+            r"area\s*relations",
+            r"area",
+            r"heron|\b1/2\s*ab\s*sin\s*c\b"
+        ], "Area (choose a formula)")
+    # Fallback: default to Sines family but accept broad labels
+    return pack([
+        r"law\s*of\s*sines",
+        r"sines",
+        r"los|sin"
+    ], "Law of Sines (Sines)")
 
 
 def apply_pythagorean(init_value):
@@ -311,112 +344,148 @@ Domain = {
     ),
 
     'normalize_inputs': Operator(head=('normalize_inputs', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='normalize_inputs', value=(normalize_inputs, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     'classify_triangle': Operator(head=('classify_triangle', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='classify_triangle', value=(classify_triangle, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Right-triangle path
     'apply_pythagorean': Operator(head=('apply_pythagorean', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='apply_pythagorean', value=(apply_pythagorean, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'use_trig_ratios': Operator(head=('use_trig_ratios', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='use_trig_ratios', value=(use_trig_ratios, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Law of sines path
     'resolve_ssa_ambiguity': Operator(head=('resolve_ssa_ambiguity', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='resolve_ssa_ambiguity', value=(resolve_ssa_ambiguity, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_missing_angles': Operator(head=('compute_missing_angles', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='compute_missing_angles', value=(compute_missing_angles, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_missing_sides': Operator(head=('compute_missing_sides', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='compute_missing_sides', value=(compute_missing_sides, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Law of cosines path
     'compute_unknown_by_cosine': Operator(head=('compute_unknown_by_cosine', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='compute_unknown_by_cosine', value=(compute_unknown_by_cosine, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'backfill_with_sines_if_needed': Operator(head=('backfill_with_sines_if_needed', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='backfill_with_sines_if_needed', value=(backfill_with_sines_if_needed, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Similarity path
     'map_correspondence': Operator(head=('map_correspondence', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
-                                effects=[Fact(field='map_correspondence', value=(map_correspondence, V('triangle')), kc=V('kc'), answer=True)],
+                                    precondition=Fact(field=V('equation'), value=V('value'), answer=False),
+                                    effects=[Fact(field='map_correspondence', value=(map_correspondence, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'scale_sides_angles': Operator(head=('scale_sides_angles', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
-                                effects=[Fact(field='scale_sides_angles', value=(scale_sides_angles, V('triangle')), kc=V('kc'), answer=True)],
+                                    precondition=Fact(field=V('equation'), value=V('value'), answer=False),
+                                    effects=[Fact(field='scale_sides_angles', value=(scale_sides_angles, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Area relations path
     'select_area_formula': Operator(head=('select_area_formula', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='select_area_formula', value=(select_area_formula, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_area': Operator(head=('compute_area', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='compute_area', value=(compute_area, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Consistency checks path
     'consistency_checks': Operator(head=('consistency_checks', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='consistency_checks', value=(consistency_checks, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Report solution path
     'report_solution': Operator(head=('report_solution', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('triangle'), value=V('triangle'), answer=False),
+                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
                                 effects=[Fact(field='report_solution', value=(report_solution, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Master method with choices by pattern in the initial text
     'solve': Method(head=('solve', V('triangle')),
         preconditions=[
-            Fact(field=V('triangle'), value=V('triangle'), answer=False)
+            # Choose branch based on the initial problem text (one guard per subtask list)
+            Fact(field=V('equation'), value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(field=V('equation'), value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(field=V('equation'), value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(field=V('equation'), value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(field=V('equation'), value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
         ],
         subtasks=[
+            # Right-triangle branch
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                # Right triangle trig
                 Task(head=('apply_pythagorean', V('triangle'), ('apply_pythagorean',)), primitive=True),
                 Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
-                # Law of Sines
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Law of Sines branch (ASA/AAS/SSA)
+            [
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
                 Task(head=('resolve_ssa_ambiguity', V('triangle'), ('resolve_ssa_ambiguity',)), primitive=True),
                 Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
                 Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
-                # Law of Cosines
-                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
-                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
-                # Similarity
-                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
-                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
-                # Area
-                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
-                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
-                # Consistency checks
                 Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                # Report
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
-            ]
+            ],
+            # Law of Cosines branch (SAS/SSS)
+            [
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
+                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Similarity branch
+            [
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
+                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Area branch
+            [
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
         ]
     ),
 }
@@ -446,7 +515,10 @@ def htn_geometry_solve_triangle_kc_mapping():
 def htn_geometry_solve_triangle_intermediate_hints():
     return {
         "normalize_inputs": ["Normalize all triangle inputs (angles, sides)."],
-        "classify_triangle": ["Classify triangle as right, oblique, etc."],
+        "classify_triangle": [
+            "Classify: Right, Sines (ASA/AAS/SSA), Cosines (SAS/SSS), Similarity, or Area.",
+            "Use natural labels, e.g., 'Right' or 'Sines'."
+        ],
         "apply_pythagorean": ["Use Pythagorean theorem for right triangles."],
         "use_trig_ratios": ["Use SOH/CAH/TOA for right triangles."],
         "resolve_ssa_ambiguity": ["Check for SSA ambiguity and resolve."],
