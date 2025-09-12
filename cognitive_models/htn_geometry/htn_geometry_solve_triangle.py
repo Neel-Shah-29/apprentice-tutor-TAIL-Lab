@@ -344,95 +344,95 @@ Domain = {
     ),
 
     'normalize_inputs': Operator(head=('normalize_inputs', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='normalize_inputs', value=(normalize_inputs, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     'classify_triangle': Operator(head=('classify_triangle', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='classify_triangle', value=(classify_triangle, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Right-triangle path
     'apply_pythagorean': Operator(head=('apply_pythagorean', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='apply_pythagorean', value=(apply_pythagorean, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'use_trig_ratios': Operator(head=('use_trig_ratios', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='use_trig_ratios', value=(use_trig_ratios, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Law of sines path
     'resolve_ssa_ambiguity': Operator(head=('resolve_ssa_ambiguity', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='resolve_ssa_ambiguity', value=(resolve_ssa_ambiguity, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_missing_angles': Operator(head=('compute_missing_angles', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='compute_missing_angles', value=(compute_missing_angles, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_missing_sides': Operator(head=('compute_missing_sides', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='compute_missing_sides', value=(compute_missing_sides, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Law of cosines path
     'compute_unknown_by_cosine': Operator(head=('compute_unknown_by_cosine', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='compute_unknown_by_cosine', value=(compute_unknown_by_cosine, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'backfill_with_sines_if_needed': Operator(head=('backfill_with_sines_if_needed', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='backfill_with_sines_if_needed', value=(backfill_with_sines_if_needed, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Similarity path
     'map_correspondence': Operator(head=('map_correspondence', V('triangle'), V('kc')),
-                                    precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                    precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                     effects=[Fact(field='map_correspondence', value=(map_correspondence, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'scale_sides_angles': Operator(head=('scale_sides_angles', V('triangle'), V('kc')),
-                                    precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                    precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                     effects=[Fact(field='scale_sides_angles', value=(scale_sides_angles, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Area relations path
     'select_area_formula': Operator(head=('select_area_formula', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='select_area_formula', value=(select_area_formula, V('triangle')), kc=V('kc'), answer=True)],
     ),
     'compute_area': Operator(head=('compute_area', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='compute_area', value=(compute_area, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Consistency checks path
     'consistency_checks': Operator(head=('consistency_checks', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='consistency_checks', value=(consistency_checks, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Report solution path
     'report_solution': Operator(head=('report_solution', V('triangle'), V('kc')),
-                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                precondition=Fact(field='triangle', value=V('triangle'), answer=False),
                                 effects=[Fact(field='report_solution', value=(report_solution, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
     # Master method with choices by pattern in the initial text
     'solve': Method(head=('solve', V('triangle')),
         preconditions=[
-            # Active branches (scaffold level_1) chosen by problem text
-            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
-            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda level, triangle: level == 'level_1' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
-            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda level, triangle: level == 'level_1' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
-            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
-            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            # Active branches chosen by problem text (UI provides 'level_0' scaffold)
+            Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda triangle: re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
             # Terminal branch when all subtasks answered
             Fact(scaffold='level_0'),
         ],
