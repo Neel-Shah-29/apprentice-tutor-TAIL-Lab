@@ -350,10 +350,15 @@ Domain = {
     ),
 
 
+    # Determine which high-level strategy to apply.  The old implementation
+    # parsed the scaffold string and would return ``False`` if the format did not
+    # match the expected pattern, which later caused a ``TypeError`` in
+    # ``check_sai``.  We only care whether the problem has reached the terminal
+    # scaffold, so the condition has been simplified accordingly.
     'solve': Method(head=('solve', V('equation')),
                     preconditions=[
-                        Fact(scaffold=V('level'))&
-                        Filter(lambda level : type(level) == str and level.split('_')[1].split('r')[0] == '1'),                    
+                        Fact(scaffold=V('level')) &
+                        Filter(lambda level: level != 'level_0r0r0'),
                         Fact(scaffold='level_0r0r0'),
                     ],
                     subtasks=[

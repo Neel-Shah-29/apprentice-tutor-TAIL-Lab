@@ -144,8 +144,8 @@
 
     function get_state(update_scaffold) {
         let state = [];
-        const initial_problem = $('#initial_problem').val(); 
-        state.push({'field': 'equation', 'value': initial_problem, 'answer': false });
+        const initial_problem = $('#initial_problem').val();
+        state.push({'field': 'triangle', 'value': initial_problem, 'answer': false });
 
         $('input, math-field').each(function() {
             let id = $(this).attr('id');
