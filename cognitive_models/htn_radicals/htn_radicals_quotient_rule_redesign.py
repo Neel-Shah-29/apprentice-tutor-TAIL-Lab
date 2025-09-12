@@ -349,10 +349,11 @@ Domain = {
     ),
 
 
+    # Simplified preconditions to avoid invalid state causing TypeError
     'solve': Method(head=('solve', V('equation')),
                     preconditions=[
-                        Fact(scaffold=V('level'))&
-                        Filter(lambda level : type(level) == str and level.split('_')[1].split('r')[0] == '1'),                    
+                        Fact(scaffold=V('level')) &
+                        Filter(lambda level: level != 'level_0r0r0'),
                         Fact(scaffold='level_0r0r0'),
                     ],
                     subtasks=[

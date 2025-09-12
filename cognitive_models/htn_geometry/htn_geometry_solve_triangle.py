@@ -344,98 +344,190 @@ Domain = {
     ),
 
     'normalize_inputs': Operator(head=('normalize_inputs', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='normalize_inputs', value=(normalize_inputs, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='normalize_inputs', value=(normalize_inputs, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_2'),
+                                ]),
 
     'classify_triangle': Operator(head=('classify_triangle', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='classify_triangle', value=(classify_triangle, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='classify_triangle', value=(classify_triangle, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_3'),
+                                ]),
 
     # Right-triangle path
     'apply_pythagorean': Operator(head=('apply_pythagorean', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='apply_pythagorean', value=(apply_pythagorean, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='apply_pythagorean', value=(apply_pythagorean, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_4'),
+                                ]),
     'use_trig_ratios': Operator(head=('use_trig_ratios', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='use_trig_ratios', value=(use_trig_ratios, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='use_trig_ratios', value=(use_trig_ratios, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_5'),
+                                ]),
 
     # Law of sines path
     'resolve_ssa_ambiguity': Operator(head=('resolve_ssa_ambiguity', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='resolve_ssa_ambiguity', value=(resolve_ssa_ambiguity, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='resolve_ssa_ambiguity', value=(resolve_ssa_ambiguity, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_4'),
+                                ]),
     'compute_missing_angles': Operator(head=('compute_missing_angles', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='compute_missing_angles', value=(compute_missing_angles, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='compute_missing_angles', value=(compute_missing_angles, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_5'),
+                                ]),
     'compute_missing_sides': Operator(head=('compute_missing_sides', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='compute_missing_sides', value=(compute_missing_sides, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='compute_missing_sides', value=(compute_missing_sides, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_6'),
+                                ]),
 
     # Law of cosines path
     'compute_unknown_by_cosine': Operator(head=('compute_unknown_by_cosine', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='compute_unknown_by_cosine', value=(compute_unknown_by_cosine, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='compute_unknown_by_cosine', value=(compute_unknown_by_cosine, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_4'),
+                                ]),
     'backfill_with_sines_if_needed': Operator(head=('backfill_with_sines_if_needed', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='backfill_with_sines_if_needed', value=(backfill_with_sines_if_needed, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='backfill_with_sines_if_needed', value=(backfill_with_sines_if_needed, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_5'),
+                                ]),
 
     # Similarity path
     'map_correspondence': Operator(head=('map_correspondence', V('triangle'), V('kc')),
-                                    precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                    effects=[Fact(field='map_correspondence', value=(map_correspondence, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                    precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                    effects=[
+                                        Fact(field='map_correspondence', value=(map_correspondence, V('triangle')), kc=V('kc'), answer=True),
+                                        Fact(scaffold='level_4'),
+                                    ]),
     'scale_sides_angles': Operator(head=('scale_sides_angles', V('triangle'), V('kc')),
-                                    precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                    effects=[Fact(field='scale_sides_angles', value=(scale_sides_angles, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                    precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                    effects=[
+                                        Fact(field='scale_sides_angles', value=(scale_sides_angles, V('triangle')), kc=V('kc'), answer=True),
+                                        Fact(scaffold='level_5'),
+                                    ]),
 
     # Area relations path
     'select_area_formula': Operator(head=('select_area_formula', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='select_area_formula', value=(select_area_formula, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='select_area_formula', value=(select_area_formula, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_4'),
+                                ]),
     'compute_area': Operator(head=('compute_area', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='compute_area', value=(compute_area, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='compute_area', value=(compute_area, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_8'),
+                                ]),
 
     # Consistency checks path
     'consistency_checks': Operator(head=('consistency_checks', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='consistency_checks', value=(consistency_checks, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='consistency_checks', value=(consistency_checks, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_7'),
+                                ]),
 
     # Report solution path
     'report_solution': Operator(head=('report_solution', V('triangle'), V('kc')),
-                                precondition=Fact(field=V('equation'), value=V('value'), answer=False),
-                                effects=[Fact(field='report_solution', value=(report_solution, V('triangle')), kc=V('kc'), answer=True)],
-    ),
+                                precondition=Fact(field='triangle', value=V('value'), answer=False),
+                                effects=[
+                                    Fact(field='report_solution', value=(report_solution, V('triangle')), kc=V('kc'), answer=True),
+                                    Fact(scaffold='level_0'),
+                                ]),
 
-    # Master method with choices by pattern in the initial text
+    # Master method with choices by scaffold level and scenario
     'solve': Method(head=('solve', V('triangle')),
         preconditions=[
-            # Choose branch based on the initial problem text (one guard per subtask list)
-            Fact(field=V('equation'), value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
-            Fact(field=V('equation'), value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
-            Fact(field=V('equation'), value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
-            Fact(field=V('equation'), value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
-            Fact(field=V('equation'), value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            # Right-triangle progress
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_2' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_3' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_4' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_5' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_7' and re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
+            # Law of Sines progress
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_1' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_2' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_3' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_4' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_5' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_6' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_7' and re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
+            # Law of Cosines progress
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_1' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_2' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_3' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_4' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_5' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_7' and re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
+            # Similarity progress
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_2' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_3' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_4' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_5' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_7' and re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
+            # Area progress
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_1' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_2' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_3' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_5' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_6' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_4' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_8' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(scaffold=V('level')) & Fact(field='triangle', value=V('triangle'), answer=False) &
+                Filter(lambda level, triangle: level == 'level_7' and re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            # Terminal branch
+            Fact(scaffold='level_0'),
         ],
         subtasks=[
-            # Right-triangle branch
+            # Right triangle stages
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -445,7 +537,37 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Sines branch (ASA/AAS/SSA)
+            [
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('apply_pythagorean', V('triangle'), ('apply_pythagorean',)), primitive=True),
+                Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('apply_pythagorean', V('triangle'), ('apply_pythagorean',)), primitive=True),
+                Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Law of Sines stages
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -456,7 +578,46 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Cosines branch (SAS/SSS)
+            [
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('resolve_ssa_ambiguity', V('triangle'), ('resolve_ssa_ambiguity',)), primitive=True),
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('resolve_ssa_ambiguity', V('triangle'), ('resolve_ssa_ambiguity',)), primitive=True),
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Law of Cosines stages
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -466,7 +627,37 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Similarity branch
+            [
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
+                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
+                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Similarity stages
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -476,14 +667,99 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Area branch
+            [
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
+                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
+                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Area stages
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
                 Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
                 Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
                 Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            [
+                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('done', ('done',)), primitive=True)
+            ],
+            # Terminal branch once all work is complete
+            [
                 Task(head=('done', ('done',)), primitive=True)
             ],
         ]
