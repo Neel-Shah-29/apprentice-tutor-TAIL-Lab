@@ -1031,19 +1031,18 @@ async def check_correctness():
                                 lti_user_id=current_user.lti_user_id
                                 ).first()
 
-    if 'htn' in x['tutor'] and 'htn_nursing_military' not in x['tutor']:
+    if 'htn' in x['tutor']:
         model = htn_loaded_models.models[x["interface"]]
         print("HTNNNNN", x['input'])
-        resp = model.check_sai(x['state'], x['selection'], x['action'], 
-                               re.sub(r'(\d+)\*sqrt\((x)\)', r'\1sqrt(\2)', 
-                                      sp.sstr(parse_latex(re.sub(r'sqrt(\d+)', r'sqrt{\1}', x['input'])), 
-                                              order="grlex")).replace("-1*", "-"))  
-    elif 'htn' in x['tutor']:
-        model = htn_loaded_models.models[x["interface"]]
-        resp = model.check_sai(x['state'], x['selection'],
-                            x['action'], x['input'])
-    else:    
-        model = loaded_models.models[x["interface"]]   
+        if 'htn_nursing_military' not in x['tutor'] and 'htn_geometry' not in x['tutor']:
+            resp = model.check_sai(x['state'], x['selection'], x['action'], 
+                                   re.sub(r'(\d+)\*sqrt\((x)\)', r'\1sqrt(\2)', 
+                                          sp.sstr(parse_latex(re.sub(r'sqrt(\d+)', r'sqrt{\1}', x['input'])), 
+                                                  order="grlex")).replace("-1*", "-"))
+        else:
+            resp = model.check_sai(x['state'], x['selection'], x['action'], x['input'])
+    else:
+        model = loaded_models.models[x["interface"]]
 
         ## Momin add Correctness start
         # if (x["tutor"] == "logarithms" or x["tutor"] == "quadratic_equations") and (x["input"] != "checked"):

@@ -77,7 +77,8 @@
         $('#' + currdiv).removeClass('btn-danger').addClass('btn-light');
         $('#' + currdiv).prop('disabled', true);
         $('.'+currdiv).css("display", "block");
-        $('.'+currdiv).find('input').prop('disabled', false);
+        // Enable inputs and selects inside this scaffold block
+        $('.'+currdiv).find('input, select, math-field').prop('disabled', false);
     }
     function get_scaffolding(state, update){
         const uniqueLevels = Array.from(
@@ -142,12 +143,75 @@
         return state;
     }
 
+    function detect_triangle_type(initial_problem) {
+        if (/^\s*Right\s*triangle/i.test(initial_problem)) return 'Right';
+        if (/^\s*(ASA|AAS)\s*:/i.test(initial_problem) || /\bSSA\b/i.test(initial_problem)) return 'Sines';
+        if (/^\s*(SAS|SSS)\s*:/i.test(initial_problem)) return 'Cosines';
+        if (/^\s*SIM\s*:/i.test(initial_problem)) return 'Similarity';
+        if (/^\s*AREA\s*:/i.test(initial_problem)) return 'Area';
+        return '';
+    }
+
+    function parse_given_values(initial_problem) {
+        const vals = {};
+        const rx = /\b([abcABC])\s*=\s*([0-9]+)/g;
+        let m;
+        while ((m = rx.exec(initial_problem)) !== null) {
+            const key = m[1];
+            const val = m[2];
+            vals[key] = val;
+        }
+        const scaleM = /\bscale\s*=\s*([0-9]+)/i.exec(initial_problem);
+        if (scaleM) vals['scale'] = scaleM[1];
+        const abM = /\bAB\s*=\s*([0-9]+)/i.exec(initial_problem);
+        if (abM) vals['AB'] = abM[1];
+        return vals;
+    }
+
+    function derive_given_pattern(initial_problem, derivedType) {
+        if (/^\s*SIM\s*:/i.test(initial_problem)) return 'Similarity';
+        if (/^\s*AREA\s*:/i.test(initial_problem)) return 'Area';
+        const vals = parse_given_values(initial_problem);
+        if (/^\s*Right\s*triangle/i.test(initial_problem) || derivedType === 'Right') return 'Right';
+        const givenSides = ['a','b','c'].filter(k => vals[k]);
+        const givenAngles = ['A','B','C'].filter(k => vals[k]);
+        if (givenSides.length === 3) return 'SSS';
+        if (givenSides.length === 2 && givenAngles.length === 1) {
+            const s = new Set(givenSides);
+            const ang = givenAngles[0];
+            const included = (s.has('a') && s.has('b') && ang === 'C') ||
+                             (s.has('a') && s.has('c') && ang === 'B') ||
+                             (s.has('b') && s.has('c') && ang === 'A');
+            return included ? 'SAS' : 'SSA';
+        }
+        if (givenAngles.length >= 2 && givenSides.length >= 1) return 'Sines';
+        if (givenSides.length >= 2) return 'Cosines';
+        return '';
+    }
+
     function get_state(update_scaffold) {
         let state = [];
         const initial_problem = $('#initial_problem').val();
         state.push({'field': 'triangle', 'value': initial_problem, 'answer': false });
 
-        $('input, math-field').each(function() {
+        // Derive triangle type from the initial problem text so the planner has an explicit fact
+        const derivedType = detect_triangle_type(initial_problem);
+        if (derivedType) {
+            state.push({'field': 'triangle_type', 'value': derivedType, 'answer': false});
+        }
+
+        // Extract and store each given side/angle as separate facts (not answers)
+        const gv = parse_given_values(initial_problem);
+        ['a','b','c','A','B','C','scale','AB'].forEach(k => {
+            if (gv[k]) state.push({'field': 'given_' + k, 'value': gv[k], 'answer': false});
+        });
+        // Derive a given_pattern to aid precondition selection
+        const givenPattern = derive_given_pattern(initial_problem, derivedType);
+        if (givenPattern) {
+            state.push({'field': 'given_pattern', 'value': givenPattern, 'answer': false});
+        }
+
+        $('input, select, math-field').each(function() {
             let id = $(this).attr('id');
             if (typeof id !== 'undefined' && id !== 'initial_problem') { 
                 const value = $(this).val(); 
@@ -219,10 +283,9 @@
             }
 
             // clear hint
-            $('math-field').removeClass("hint_field");
-            $('math-field').removeClass("incorrect_field");
-            $('input').removeClass("hint_field");
-            $('input').removeClass("incorrect_field")
+            $('math-field').removeClass("hint_field incorrect_field");
+            $('input').removeClass("hint_field incorrect_field");
+            $('select').removeClass("hint_field incorrect_field");
             $('button').removeClass("incorrect_field")
             $('button').removeClass("hint_field");
             hint = null;
@@ -399,6 +462,7 @@
                                                         });
 
                                                     $("input").change(check_correctness);
+                                                    $("select").change(check_correctness);
                                                     $("math-field").change(check_correctness);
 
                                                 });

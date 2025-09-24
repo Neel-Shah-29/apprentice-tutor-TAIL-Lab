@@ -29,9 +29,9 @@ def htn_geometry_solve_triangle_problem():
         # Law of Cosines (SAS)
         "SAS: a=7, b=8, C=60.",
         # Similarity scaling
-        "SIM: scale=2, AB=5.",
+        # "SIM: scale=2, AB=5.",
         # Area relation 1/2 ab sin C
-        "AREA: a=8, b=10, C=30",
+        # "AREA: a=8, b=10, C=30",
     ]
     return choice(scenarios)
 
@@ -77,44 +77,44 @@ def classify_triangle(init_value):
 
     if _any_match(r"^\s*Right\s*triangle", init_value):
         return pack([
-            r"righttriangletrig",
-            r"right\s*triangle",
             r"right",
+            r"right\s*triangle",
+            r"righttriangletrig",
             r"right-?angled",
             r"rt|rtt"
-        ], "Right triangle (Right / RightTriangleTrig)")
+        ], "Right")
     if (_any_match(r"^\s*ASA\s*:\s*", init_value)
         or _any_match(r"^\s*AAS\s*:\s*", init_value)
         or _any_match(r"\bSSA\b", init_value)):
         return pack([
-            r"law\s*of\s*sines",
             r"sines",
+            r"law\s*of\s*sines",
             r"los|sin"
-        ], "Law of Sines (Sines)")
+        ], "Sines")
     if _any_match(r"^\s*SAS\s*:\s*", init_value) or _any_match(r"^\s*SSS\s*:\s*", init_value):
         return pack([
-            r"law\s*of\s*cosines",
             r"cosines",
+            r"law\s*of\s*cosines",
             r"loc|cos"
-        ], "Law of Cosines (Cosines)")
+        ], "Cosines")
     if _any_match(r"^\s*SIM\s*:\s*", init_value):
         return pack([
-            r"similarity\s*scaling",
             r"similarity",
+            r"similarity\s*scaling",
             r"sim"
-        ], "Similarity (Scaling)")
+        ], "Similarity")
     if _any_match(r"^\s*AREA\s*:\s*", init_value):
         return pack([
-            r"area\s*relations",
             r"area",
+            r"area\s*relations",
             r"heron|\b1/2\s*ab\s*sin\s*c\b"
-        ], "Area (choose a formula)")
+        ], "Area")
     # Fallback: default to Sines family but accept broad labels
     return pack([
-        r"law\s*of\s*sines",
         r"sines",
+        r"law\s*of\s*sines",
         r"los|sin"
-    ], "Law of Sines (Sines)")
+    ], "Sines")
 
 
 def apply_pythagorean(init_value):
@@ -216,8 +216,11 @@ def scale_sides_angles(init_value):
 
 
 def select_area_formula(init_value):
-    # Accept a description of the chosen formula; guide via hint.
-    return tuple([(re.compile(r".+"), "Use 1/2·a·b·sin(C)")])
+    # Accept specific dropdown-friendly labels
+    return tuple([
+        (re.compile(r"1/2·a·b·sin\(C\)", re.I), "1/2·a·b·sin(C)"),
+        (re.compile(r"Heron", re.I), "Heron")
+    ])
 
 
 def compute_area(init_value):
@@ -419,25 +422,19 @@ Domain = {
                                 effects=[Fact(field='report_solution', value=(report_solution, V('triangle')), kc=V('kc'), answer=True)],
     ),
 
-    # Master method with choices by pattern in the initial text
+    # Master method chosen only by triangle_type (frontend derived)
     'solve': Method(head=('solve', V('triangle')),
         preconditions=[
-            # Active branches chosen by problem text (UI provides 'level_0' scaffold)
-            Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*Right\s*triangle", triangle, flags=re.I) is not None),
-            Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"(^\s*ASA\s*:\s*)|(^\s*AAS\s*:\s*)|(\bSSA\b)", triangle, flags=re.I) is not None),
-            Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"(^\s*SAS\s*:\s*)|(^\s*SSS\s*:\s*)", triangle, flags=re.I) is not None),
-            Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*SIM\s*:\s*", triangle, flags=re.I) is not None),
-            Fact(field='triangle', value=V('triangle'), answer=False) &
-                Filter(lambda triangle: re.search(r"^\s*AREA\s*:\s*", triangle, flags=re.I) is not None),
+            Fact(field='triangle_type', value='Right', answer=False),
+            Fact(field='triangle_type', value='Sines', answer=False),
+            Fact(field='triangle_type', value='Cosines', answer=False),
+            Fact(field='triangle_type', value='Similarity', answer=False),
+            Fact(field='triangle_type', value='Area', answer=False),
             # Terminal branch when all subtasks answered
             Fact(scaffold='level_0'),
         ],
         subtasks=[
-            # Right-triangle branch
+          
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -447,7 +444,7 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Sines branch (ASA/AAS/SSA)
+            # Law of Sines via triangle_type
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -458,7 +455,7 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Cosines branch (SAS/SSS)
+            # Law of Cosines via triangle_type
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -468,7 +465,7 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Similarity branch
+            # Similarity via triangle_type
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
@@ -478,7 +475,7 @@ Domain = {
                 Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Area branch
+            # Area via triangle_type
             [
                 Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
                 Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
