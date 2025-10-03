@@ -89,13 +89,15 @@ def classify_triangle(init_value):
         return pack([
             r"sines",
             r"law\s*of\s*sines",
-            r"los|sin"
+            r"los|sin",
+            r"S*(i*(n*(e*s)))"
         ], "Sines")
     if _any_match(r"^\s*SAS\s*:\s*", init_value) or _any_match(r"^\s*SSS\s*:\s*", init_value):
         return pack([
             r"cosines",
             r"law\s*of\s*cosines",
-            r"loc|cos"
+            r"loc|cos",
+            r"C*(o*(s*(i*(n*(e*s)))))"
         ], "Cosines")
     if _any_match(r"^\s*SIM\s*:\s*", init_value):
         return pack([
@@ -188,8 +190,9 @@ def compute_unknown_by_cosine(init_value):
     c2 = a*a + b*b - 2*a*b*sp.cos(C*deg)
     c = sp.sqrt(sp.simplify(c2))
     hint = latex(c)
-    ans = sstr(c, order="grlex")
-    return tuple([(re.compile(re.escape(ans)), hint)])
+    # ans = sstr(c, order="grlex")
+    ans = re.compile(re.sub(r'([-+^()*])', r'\\\1', sstr(c, order="grlex")))
+    return tuple([(ans, hint)])
 
 
 def backfill_with_sines_if_needed(init_value):
@@ -333,8 +336,10 @@ def report_solution(init_value):
         solution.append(f"c = {c}")
     if area is not None:
         solution.append(f"area = {sstr(area)}")
-
-    return tuple([(re.compile("solution", re.I), "Solution: " + ", ".join(solution))])
+    # Build a canonical plain-text summary and expect it as a string input.
+    final_str = "Solution: " + ", ".join(solution)
+    pattern = re.compile(re.escape(final_str), re.I)
+    return tuple([(pattern, final_str)])
 
 
 # ----------------------
