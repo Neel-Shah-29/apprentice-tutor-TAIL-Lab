@@ -81,7 +81,8 @@ def classify_triangle(init_value):
             r"right\s*triangle",
             r"righttriangletrig",
             r"right-?angled",
-            r"rt|rtt"
+            r"rt|rtt",
+            r"R*(i*(g*(h*t)))"
         ], "Right")
     if (_any_match(r"^\s*ASA\s*:\s*", init_value)
         or _any_match(r"^\s*AAS\s*:\s*", init_value)
@@ -150,7 +151,20 @@ def resolve_ssa_ambiguity(init_value):
     # If SSA present -> ambiguous; else unique
     ambiguous = _any_match(r"\bSSA\b", init_value)
     expected = "ambiguous" if ambiguous else "unique"
-    return tuple([(re.compile(expected, re.I), expected)])
+
+    # Always accept the plain word first.
+    patterns = [(re.compile(expected, re.I), expected)]
+
+    # Also accept MathLive-style character-multiplication strings like
+    # u*(n*(i*(q*(e*u)))) for "unique", and analogous for "ambiguous".
+    if expected == "unique":
+        # Allow both ...u.*e... and ...e.*u... at the end, since we observed both.
+        patterns.append((re.compile(r"u.*n.*i.*q.*u.*e", re.I), expected))
+        patterns.append((re.compile(r"u.*n.*i.*q.*e.*u", re.I), expected))
+    else:  # expected == "ambiguous"
+        patterns.append((re.compile(r"a.*m.*b.*i.*g.*u.*o.*u.*s", re.I), expected))
+
+    return tuple(patterns)
 
 
 def compute_missing_angles(init_value):
@@ -321,6 +335,7 @@ def report_solution(init_value):
         s = sp.Rational(a + b + c, 2)
         area = sp.nsimplify(sp.sqrt(s * (s - a) * (s - b) * (s - c)))
 
+    # Canonical plain-text summary (used also for the hint)
     solution = []
     if A is not None:
         solution.append(f"A = {sstr(sp.nsimplify(A))}")
@@ -336,10 +351,37 @@ def report_solution(init_value):
         solution.append(f"c = {c}")
     if area is not None:
         solution.append(f"area = {sstr(area)}")
-    # Build a canonical plain-text summary and expect it as a string input.
+
     final_str = "Solution: " + ", ".join(solution)
-    pattern = re.compile(re.escape(final_str), re.I)
-    return tuple([(pattern, final_str)])
+    patterns = [(re.compile(re.escape(final_str), re.I), final_str)]
+
+    # Lenient matcher that allows extra spacing or words between parts, keeping order
+    def part(label, value):
+        return rf"{label}\s*=\s*{re.escape(value)}"
+
+    parts = []
+    var_values = []
+    for lbl, val in [("A", A), ("B", B), ("C", C), ("a", a), ("b", b), ("c", c)]:
+        if val is not None:
+            v = sstr(sp.nsimplify(val)) if lbl.isupper() else str(val)
+            parts.append(part(lbl, v))
+            var_values.append((lbl, v))
+    if area is not None:
+        v = sstr(area)
+        parts.append(part("area", v))
+        var_values.append(("area", v))
+
+    if parts:
+        loose = r"Solution:\s*" + r".*".join(parts)
+        patterns.append((re.compile(loose, re.I), final_str))
+
+        # Accept MathLive/Sympy-style equation forms like Eq((S...)/X, value)
+        # We don't depend on exact letter-by-letter tokenization; match any LHS over X.
+        for var_name, var_val in var_values:
+            eq_pat = r"^Eq\(.*/" + re.escape(var_name) + r",\s*" + re.escape(var_val) + r"\)$"
+            patterns.append((re.compile(eq_pat, re.I), final_str))
+
+    return tuple(patterns)
 
 
 # ----------------------
