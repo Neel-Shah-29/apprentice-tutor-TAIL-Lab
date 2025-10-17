@@ -82,7 +82,7 @@ def classify_triangle(init_value):
             r"righttriangletrig",
             r"right-?angled",
             r"rt|rtt",
-            r"R*(i*(g*(h*t)))"
+            r"R\\*i\\*g\\*h\\*t"
         ], "Right")
     if (_any_match(r"^\s*ASA\s*:\s*", init_value)
         or _any_match(r"^\s*AAS\s*:\s*", init_value)
@@ -91,26 +91,28 @@ def classify_triangle(init_value):
             r"sines",
             r"law\s*of\s*sines",
             r"los|sin",
-            r"S*(i*(n*(e*s)))"
+            r"S\\*i\\*n\\*e\\*s"
         ], "Sines")
     if _any_match(r"^\s*SAS\s*:\s*", init_value) or _any_match(r"^\s*SSS\s*:\s*", init_value):
         return pack([
             r"cosines",
             r"law\s*of\s*cosines",
             r"loc|cos",
-            r"C*(o*(s*(i*(n*(e*s)))))"
+            r"C\\*o\\*s\\*i\\*n\\*e\\*s"
         ], "Cosines")
     if _any_match(r"^\s*SIM\s*:\s*", init_value):
         return pack([
             r"similarity",
             r"similarity\s*scaling",
-            r"sim"
+            r"sim",
+            r"S\\*i\\*m\\*i\\*l\\*a\\*r\\*i\\*t\\*y"
         ], "Similarity")
     if _any_match(r"^\s*AREA\s*:\s*", init_value):
         return pack([
             r"area",
             r"area\s*relations",
-            r"heron|\b1/2\s*ab\s*sin\s*c\b"
+            r"heron|\b1/2\s*ab\s*sin\s*c\b",
+            r"A\\*r\\*e\\*a"
         ], "Area")
     # Fallback: default to Sines family but accept broad labels
     return pack([
@@ -191,6 +193,106 @@ def compute_missing_sides(init_value):
     hint = latex(b)
     ans = sstr(b, order="grlex")
     return tuple([(re.compile(re.escape(ans)), hint)])
+
+# --- Final value fillers for top-of-form blocks ---
+def final_angle_B(init_value):
+    vals = _parse_vals(init_value)
+    A = vals.get('A')
+    C = vals.get('C')
+    a = vals.get('a')
+    b = vals.get('b')
+    # ASA/AAS direct
+    if A is not None and C is not None:
+        B = 180 - (A + C)
+        return tuple([(re.compile(str(B)), str(B))])
+    # Right triangle: derive from a,b
+    if a is not None and b is not None and C is None:
+        c = sp.sqrt(a*a + b*b)
+        # B opposite side b
+        Bf = float(sp.N(sp.asin(sp.Rational(b, c)) / deg))
+        hint = ("%0.2f" % Bf).rstrip("0").rstrip(".")
+        answer_regex = re.compile(rf'^{hint}(?:\.0*|0+)?$')
+        return tuple([(answer_regex, hint)])
+    # SAS: use A (from separate step) if available; else try direct
+    if a is not None and b is not None and C is not None and A is not None:
+        B = 180 - (A + C)
+        hint = str(B)
+        answer_regex = re.compile(rf'^{re.escape(hint)}(?:\.0*|0+)?$')
+        return tuple([(answer_regex, hint)])
+    return _ok_any()
+
+def final_side_b(init_value):
+    vals = _parse_vals(init_value)
+    A = vals.get('A')
+    C = vals.get('C')
+    a = vals.get('a')
+    if A is None or C is None or a is None:
+        return _ok_any()
+    B = 180 - (A + C)
+    b = sp.nsimplify(a * sp.sin(B*deg) / sp.sin(A*deg))
+    hint = latex(b)
+    ans = sstr(b, order="grlex")
+    return tuple([(re.compile(re.escape(ans)), hint)])
+
+def final_side_c(init_value):
+    vals = _parse_vals(init_value)
+    a = vals.get('a')
+    b = vals.get('b')
+    C = vals.get('C')
+    # Right triangle with legs a and b
+    if a is not None and b is not None and C is None:
+        c = sp.sqrt(a*a + b*b)
+        hint = latex(c)
+        ans = sstr(c, order="grlex")
+        return tuple([(re.compile(re.escape(ans)), hint)])
+    # SAS/SSS via Law of Cosines when a,b,C given
+    if a is not None and b is not None and C is not None:
+        c2 = a*a + b*b - 2*a*b*sp.cos(C*deg)
+        c = sp.sqrt(sp.simplify(c2))
+        hint = latex(c)
+        ans = re.compile(re.sub(r'([-+^()*])', r'\\\1', sstr(c, order="grlex")))
+        return tuple([(ans, hint)])
+    # ASA/AAS via Law of Sines when a,A,C given
+    A = vals.get('A')
+    if a is not None and A is not None and C is not None:
+        c = sp.nsimplify(a * sp.sin(C*deg) / sp.sin(A*deg))
+        hint = latex(c)
+        ans = sstr(c, order="grlex")
+        return tuple([(re.compile(re.escape(ans)), hint)])
+    return _ok_any()
+
+def final_angle_A(init_value):
+    vals = _parse_vals(init_value)
+    A = vals.get('A')
+    if A is not None:
+        return _ok_any()
+    a = vals.get('a')
+    b = vals.get('b')
+    C = vals.get('C')
+    # Right triangle: a,b given -> A = asin(a/c)
+    if a is not None and b is not None and C is None:
+        c = sp.sqrt(a*a + b*b)
+        Af = float(sp.N(sp.asin(sp.Rational(a, c)) / deg))
+        hint = ("%0.2f" % Af).rstrip("0").rstrip(".")
+        answer_regex = re.compile(rf'^{hint}(?:\.0*|0+)?$')
+        return tuple([(answer_regex, hint)])
+    # SAS: a,b,C -> A = asin(a*sin C / c)
+    if a is not None and b is not None and C is not None:
+        c2 = a*a + b*b - 2*a*b*sp.cos(C*deg)
+        c = sp.sqrt(sp.simplify(c2))
+        Af = float(sp.N(sp.asin(a*sp.sin(C*deg)/c) / deg))
+        hint = ("%0.2f" % Af).rstrip("0").rstrip(".")
+        answer_regex = re.compile(rf'^{hint}(?:\.0*|0+)?$')
+        return tuple([(answer_regex, hint)])
+    return _ok_any()
+
+def final_angle_C(init_value):
+    vals = _parse_vals(init_value)
+    # Right triangle: assume right angle at C
+    if _any_match(r"^\s*Right\s*triangle", init_value) and vals.get('C') is None:
+        hint = '90'
+        return tuple([(re.compile(r'^90(?:\.0*|0+)?$'), hint)])
+    return _ok_any()
 
 
 def compute_unknown_by_cosine(init_value):
@@ -393,6 +495,191 @@ Domain = {
                      effects=[Fact(field='done', value=((re.compile('x'),),), kc=V('kc'), answer=True)],
     ),
 
+    # Fill top-of-form blocks only when computable
+    'angle_B': Operator(
+        head=('angle_B', V('triangle'), V('kc')),
+        precondition=Fact(field=V('triangle'), value=V('val'), answer=False) &
+                    Filter(lambda val: (
+                        # ASA/AAS: A and C known
+                        (re.search(r"\\bA\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bC\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bB\\s*=\\s*\\d+", val)) or
+                        # Right triangle: a,b given
+                        (re.search(r"^\\s*Right\\s*triangle", val, re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bB\\s*=\\s*\\d+", val)) or
+                        # SAS: a,b,C present, B missing
+                        (re.search(r"^\\s*SAS\\s*:\\s*", val, re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bC\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bB\\s*=\\s*\\d+", val))
+                    )),
+        effects=[Fact(field='angle_B', value=(final_angle_B, V('val')), kc=V('kc'), answer=True)],
+    ),
+
+    'side_b': Operator(
+        head=('side_b', V('triangle'), V('kc')),
+        precondition=Fact(field=V('triangle'), value=V('val'), answer=False) &
+                    Filter(lambda val: re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                                      re.search(r"\\bA\\s*=\\s*\\d+", val) and
+                                      re.search(r"\\bC\\s*=\\s*\\d+", val) and
+                                      not re.search(r"\\bb\\s*=\\s*\\d+", val)),
+        effects=[Fact(field='side_b', value=(final_side_b, V('val')), kc=V('kc'), answer=True)],
+    ),
+
+    'side_c': Operator(
+        head=('side_c', V('triangle'), V('kc')),
+        precondition=Fact(field=V('triangle'), value=V('val'), answer=False) &
+                    Filter(lambda val: (
+                        # Right triangle style: a & b given, c missing
+                        (re.search(r"^\\s*Right\\s*triangle", val, flags=re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bc\\s*=\\s*\\d+", val)) or
+                        # SAS: a, b, C given
+                        (re.search(r"^\\s*SAS\\s*:\\s*", val, flags=re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bC\\s*=\\s*\\d+", val)) or
+                        # ASA/AAS: a, A, C given
+                        ((re.search(r"^\\s*ASA\\s*:\\s*", val, flags=re.I) or
+                          re.search(r"^\\s*AAS\\s*:\\s*", val, flags=re.I)) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bA\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bC\\s*=\\s*\\d+", val))
+                    )),
+        effects=[Fact(field='side_c', value=(final_side_c, V('val')), kc=V('kc'), answer=True)],
+    ),
+
+    'angle_A': Operator(
+        head=('angle_A', V('triangle'), V('kc')),
+        precondition=Fact(field=V('triangle'), value=V('val'), answer=False) &
+                    Filter(lambda val: (
+                        # Right triangle: a,b known, A missing
+                        (re.search(r"^\\s*Right\\s*triangle", val, re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bA\\s*=\\s*\\d+", val)) or
+                        # SAS: a,b,C present, A missing
+                        (re.search(r"^\\s*SAS\\s*:\\s*", val, re.I) and
+                         re.search(r"\\ba\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bb\\s*=\\s*\\d+", val) and
+                         re.search(r"\\bC\\s*=\\s*\\d+", val) and
+                         not re.search(r"\\bA\\s*=\\s*\\d+", val))
+                    )),
+        effects=[Fact(field='angle_A', value=(final_angle_A, V('val')), kc=V('kc'), answer=True)],
+    ),
+
+    'angle_C': Operator(
+        head=('angle_C', V('triangle'), V('kc')),
+        precondition=Fact(field=V('triangle'), value=V('val'), answer=False) &
+                    Filter(lambda val: (
+                        # Right triangle: C missing
+                        re.search(r"^\\s*Right\\s*triangle", val, re.I) and
+                        not re.search(r"\\bC\\s*=\\s*\\d+", val)
+                    )),
+        effects=[Fact(field='angle_C', value=(final_angle_C, V('val')), kc=V('kc'), answer=True)],
+    ),
+
+    # Nested methods to fill respective solution blocks (no final string summary)
+    'solve_right': Method(
+        head=('solve_right', V('triangle')),
+        preconditions=[
+            Fact(field=V('triangle'), value=V('val'), answer=False) &
+            Fact(field='triangle_type', value='Right')
+        ],
+        subtasks=[
+            (
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('apply_pythagorean', V('triangle'), ('apply_pythagorean',)), primitive=True),
+                Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
+                Task(head=('side_c', V('triangle'), ('side_c',)), primitive=True),
+                Task(head=('angle_A', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('angle_B', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('angle_C', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+            ),
+        ]
+    ),
+
+    'solve_sines': Method(
+        head=('solve_sines', V('triangle')),
+        preconditions=[
+            Fact(field=V('triangle'), value=V('val'), answer=False) &
+            Fact(field='triangle_type', value='Sines')
+        ],
+        subtasks=[
+            (
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('resolve_ssa_ambiguity', V('triangle'), ('resolve_ssa_ambiguity',)), primitive=True),
+                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('angle_B', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('side_b', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('side_c', V('triangle'), ('compute_missing_sides',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+            ),
+        ]
+    ),
+
+    'solve_cosines': Method(
+        head=('solve_cosines', V('triangle')),
+        preconditions=[
+            Fact(field=V('triangle'), value=V('val'), answer=False) &
+            Fact(field='triangle_type', value='Cosines')
+        ],
+        subtasks=[
+            (
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
+                Task(head=('side_c', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
+                Task(head=('angle_A', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('angle_B', V('triangle'), ('compute_missing_angles',)), primitive=True),
+                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+            ),
+        ]
+    ),
+
+    'solve_similarity': Method(
+        head=('solve_similarity', V('triangle')),
+        preconditions=[
+            Fact(field=V('triangle'), value=V('val'), answer=False) &
+            Fact(field='triangle_type', value='Similarity')
+        ],
+        subtasks=[
+            (
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
+                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+            ),
+        ]
+    ),
+
+    'solve_area': Method(
+        head=('solve_area', V('triangle')),
+        preconditions=[
+            Fact(field=V('triangle'), value=V('val'), answer=False) &
+            Fact(field='triangle_type', value='Area')
+        ],
+        subtasks=[
+            (
+                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
+                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
+                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
+                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
+                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
+            ),
+        ]
+    ),
+
     'normalize_inputs': Operator(head=('normalize_inputs', V('triangle'), V('kc')),
                                 precondition=Fact(field=V('triangle'), value=V('val'), answer=False),
                                 effects=[Fact(field='normalize_inputs', value=(normalize_inputs, V('val')), kc=V('kc'), answer=True)],
@@ -469,7 +756,7 @@ Domain = {
                                 effects=[Fact(field='report_solution', value=(report_solution, V('val')), kc=V('kc'), answer=True)],
     ),
 
-    # Master method chosen only by triangle_type (frontend derived)
+    # Master method dispatches to nested methods by triangle_type (frontend derived)
     'solve': Method(head=('solve', V('triangle')),
         preconditions=[
             Fact(field='triangle_type', value='Right'),
@@ -477,59 +764,32 @@ Domain = {
             Fact(field='triangle_type', value='Cosines'),
             Fact(field='triangle_type', value='Similarity'),
             Fact(field='triangle_type', value='Area'),
-            # Terminal branch when all subtasks answered
             Fact(scaffold='level_0'),
         ],
         subtasks=[
-          
+            # Right-triangle path
             [
-                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
-                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                Task(head=('apply_pythagorean', V('triangle'), ('apply_pythagorean',)), primitive=True),
-                Task(head=('use_trig_ratios', V('triangle'), ('use_trig_ratios',)), primitive=True),
-                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('solve_right', V('triangle')), primitive=False),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Sines via triangle_type
+            # Law of Sines path
             [
-                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
-                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                Task(head=('resolve_ssa_ambiguity', V('triangle'), ('resolve_ssa_ambiguity',)), primitive=True),
-                Task(head=('compute_missing_angles', V('triangle'), ('compute_missing_angles',)), primitive=True),
-                Task(head=('compute_missing_sides', V('triangle'), ('compute_missing_sides',)), primitive=True),
-                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('solve_sines', V('triangle')), primitive=False),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Law of Cosines via triangle_type
+            # Law of Cosines path
             [
-                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
-                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                Task(head=('compute_unknown_by_cosine', V('triangle'), ('compute_unknown_by_cosine',)), primitive=True),
-                Task(head=('backfill_with_sines_if_needed', V('triangle'), ('backfill_with_sines_if_needed',)), primitive=True),
-                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('solve_cosines', V('triangle')), primitive=False),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Similarity via triangle_type
+            # Similarity path
             [
-                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
-                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                Task(head=('map_correspondence', V('triangle'), ('map_correspondence',)), primitive=True),
-                Task(head=('scale_sides_angles', V('triangle'), ('scale_sides_angles',)), primitive=True),
-                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('solve_similarity', V('triangle')), primitive=False),
                 Task(head=('done', ('done',)), primitive=True)
             ],
-            # Area via triangle_type
+            # Area path
             [
-                Task(head=('normalize_inputs', V('triangle'), ('normalize_inputs',)), primitive=True),
-                Task(head=('classify_triangle', V('triangle'), ('classify_triangle',)), primitive=True),
-                Task(head=('select_area_formula', V('triangle'), ('select_area_formula',)), primitive=True),
-                Task(head=('compute_area', V('triangle'), ('compute_area',)), primitive=True),
-                Task(head=('consistency_checks', V('triangle'), ('consistency_checks',)), primitive=True),
-                Task(head=('report_solution', V('triangle'), ('report_solution',)), primitive=True),
+                Task(head=('solve_area', V('triangle')), primitive=False),
                 Task(head=('done', ('done',)), primitive=True)
             ],
             # Terminal branch once all work is complete
@@ -550,6 +810,11 @@ def htn_geometry_solve_triangle_kc_mapping():
         "resolve_ssa_ambiguity": "Resolve SSA ambiguity",
         "compute_missing_angles": "Compute missing angles",
         "compute_missing_sides": "Compute missing sides",
+        "angle_B": "Compute missing angles",
+        "angle_A": "Compute missing angles",
+        "angle_C": "Compute missing angles",
+        "side_b": "Compute missing sides",
+        "side_c": "Compute missing sides",
         "compute_unknown_by_cosine": "Law of Cosines for unknown",
         "backfill_with_sines_if_needed": "Backfill with Law of Sines if needed",
         "map_correspondence": "Map triangle correspondence",
@@ -574,6 +839,11 @@ def htn_geometry_solve_triangle_intermediate_hints():
         "resolve_ssa_ambiguity": ["Check for SSA ambiguity and resolve."],
         "compute_missing_angles": ["Compute missing angles using Law of Sines."],
         "compute_missing_sides": ["Compute missing sides using Law of Sines."],
+        "angle_A": ["Fill the missing angle A at the top."],
+        "angle_B": ["Fill the missing angle B at the top."],
+        "angle_C": ["Fill the missing angle C at the top."],
+        "side_b": ["Fill the missing side b at the top."],
+        "side_c": ["Fill the missing side c at the top."],
         "compute_unknown_by_cosine": ["Use Law of Cosines for SSS/SAS cases."],
         "backfill_with_sines_if_needed": ["Use Law of Sines after Law of Cosines if needed."],
         "map_correspondence": ["Map corresponding sides/angles for similarity."],
